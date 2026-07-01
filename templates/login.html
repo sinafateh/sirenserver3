@@ -5,28 +5,41 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ورود — Siren Tester</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
         :root {
-            --bg1: #1e1e2f; --bg2: #0a0a0f;
-            --glass: rgba(30,30,40,0.5); --text: #ffffff;
-            --text-sec: rgba(255,255,255,0.6);
-            --border: rgba(255,255,255,0.2);
-            --input: rgba(255,255,255,0.1);
-            --btn: #0a84ff; --btn-hover: #0063ce;
-            --error: #ff453a; --success: #30d158;
+            --bg1: #1e1e2f;
+            --bg2: #0a0a0f;
+            --glass: rgba(30, 30, 40, 0.5);
+            --text: #ffffff;
+            --text-sec: rgba(255, 255, 255, 0.6);
+            --border: rgba(255, 255, 255, 0.2);
+            --input: rgba(255, 255, 255, 0.1);
+            --btn: #0a84ff;
+            --btn-hover: #0063ce;
+            --error: #ff453a;
+            --success: #30d158;
         }
         body.light {
-            --bg1: #e0e0e8; --bg2: #f5f5f7;
-            --glass: rgba(255,255,255,0.6); --text: #1c1c1e;
-            --text-sec: rgba(0,0,0,0.6);
-            --border: rgba(0,0,0,0.15);
-            --input: rgba(0,0,0,0.05);
-            --btn: #007aff; --btn-hover: #0051d5;
+            --bg1: #e0e0e8;
+            --bg2: #f5f5f7;
+            --glass: rgba(255, 255, 255, 0.6);
+            --text: #1c1c1e;
+            --text-sec: rgba(0, 0, 0, 0.6);
+            --border: rgba(0, 0, 0, 0.15);
+            --input: rgba(0, 0, 0, 0.05);
+            --btn: #007aff;
+            --btn-hover: #0051d5;
         }
         body {
             min-height: 100vh;
             background: radial-gradient(circle at 20% 30%, var(--bg1), var(--bg2));
-            display: flex; align-items: center; justify-content: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             padding: 20px;
             transition: background 0.4s ease;
@@ -40,10 +53,12 @@
             padding: 32px 28px;
             width: 100%;
             max-width: 400px;
-            box-shadow: 0 25px 45px rgba(0,0,0,0.3);
+            box-shadow: 0 25px 45px rgba(0, 0, 0, 0.3);
             transition: all 0.3s ease;
         }
-        body.light .glass-card { box-shadow: 0 25px 45px rgba(0,0,0,0.1); }
+        body.light .glass-card {
+            box-shadow: 0 25px 45px rgba(0, 0, 0, 0.1);
+        }
         h2 {
             font-size: 32px;
             font-weight: 590;
@@ -66,8 +81,13 @@
             outline: none;
             transition: all 0.3s;
         }
-        input:focus { border-color: var(--btn); box-shadow: 0 0 0 4px rgba(10,132,255,0.2); }
-        input::placeholder { color: var(--text-sec); }
+        input:focus {
+            border-color: var(--btn);
+            box-shadow: 0 0 0 4px rgba(10, 132, 255, 0.2);
+        }
+        input::placeholder {
+            color: var(--text-sec);
+        }
         button {
             width: 100%;
             padding: 16px;
@@ -81,10 +101,17 @@
             margin-top: 12px;
             transition: all 0.2s;
         }
-        button:hover { background: var(--btn-hover); transform: scale(0.98); }
-        button:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+        button:hover {
+            background: var(--btn-hover);
+            transform: scale(0.98);
+        }
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
         .error-box {
-            background: rgba(255,69,58,0.15);
+            background: rgba(255, 69, 58, 0.15);
             border: 0.5px solid var(--error);
             border-radius: 20px;
             padding: 12px 16px;
@@ -95,8 +122,12 @@
             display: none;
         }
         .theme-btn {
-            position: fixed; top: 18px; right: 18px; z-index: 200;
-            background: var(--glass); backdrop-filter: blur(25px);
+            position: fixed;
+            top: 18px;
+            right: 18px;
+            z-index: 200;
+            background: var(--glass);
+            backdrop-filter: blur(25px);
             border: 0.5px solid var(--border);
             border-radius: 50px;
             padding: 8px 16px;
@@ -107,25 +138,33 @@
             width: auto;
             margin: 0;
         }
-        .theme-btn:hover { transform: scale(0.95); }
+        .theme-btn:hover {
+            transform: scale(0.95);
+        }
         .info-text {
             margin-top: 20px;
             text-align: center;
             font-size: 12px;
             color: var(--text-sec);
         }
-        .info-text strong { color: var(--text); }
+        .info-text strong {
+            color: var(--text);
+        }
         .loading {
             display: inline-block;
             width: 20px;
             height: 20px;
-            border: 3px solid rgba(255,255,255,0.3);
+            border: 3px solid rgba(255, 255, 255, 0.3);
             border-radius: 50%;
             border-top-color: #fff;
             animation: spin 1s ease-in-out infinite;
             margin-right: 8px;
         }
-        @keyframes spin { to { transform: rotate(360deg); } }
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
     </style>
 </head>
 <body>
@@ -135,7 +174,7 @@
     <div class="glass-card">
         <h2>🔐 Siren Tester</h2>
         <div id="errorBox" class="error-box">❌ نام کاربری یا رمز عبور اشتباه است</div>
-        
+
         <form id="loginForm" onsubmit="handleLogin(event)">
             <input type="text" id="username" placeholder="نام کاربری" required autocomplete="username" value="sina">
             <input type="password" id="password" placeholder="رمز عبور" required autocomplete="current-password" value="sina">
@@ -193,7 +232,7 @@
                     localStorage.setItem('username', data.username);
                     localStorage.setItem('is_admin', data.is_admin);
 
-                    // رفتن به داشبورد
+                    // 🟢 رفتن به داشبورد (کوکی هم تنظیم شده)
                     window.location.href = '/dashboard';
                 } else {
                     errorBox.textContent = '❌ ' + (data.detail || 'نام کاربری یا رمز عبور اشتباه است');
