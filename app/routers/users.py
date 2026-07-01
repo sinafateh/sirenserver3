@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Request, HTTPException
+from fastapi import APIRouter, Request, HTTPException, Header, Depends
 from fastapi.responses import JSONResponse
 from app.models.models import UserCreate
 from app.services.auth_service import get_user_from_session, hash_password
@@ -6,11 +6,12 @@ from app.database.database import get_all_users, get_user_by_username, add_user,
 
 router = APIRouter()
 
-def require_admin(request: Request):
+def require_admin(session_id: str = Header(None)):
     """بررسی اینکه کاربر ادمین باشد"""
-    session_id = request.cookies.get("session_id")
-    user = get_user_from_session(session_id)
+    if not session_id:
+        raise HTTPException(status_code=401, detail="Not authenticated")
     
+    user = get_user_from_session(session_id)
     if not user:
         raise HTTPException(status_code=401, detail="Not authenticated")
     if not user.get("is_admin"):
@@ -18,16 +19,13 @@ def require_admin(request: Request):
     return user
 
 @router.get("/api/users")
-async def get_users(request: Request):
+async def get_users(current_user = Depends(require_admin)):
     """دریافت لیست کاربران"""
-    require_admin(request)
     return JSONResponse(get_all_users())
 
 @router.post("/api/users")
-async def add_new_user(user: UserCreate, request: Request):
+async def add_new_user(user: UserCreate, current_user = Depends(require_admin)):
     """افزودن کاربر جدید"""
-    current_user = require_admin(request)
-    
     if user.username == "sina":
         raise HTTPException(status_code=400, detail="Username 'sina' is reserved")
     
@@ -38,10 +36,8 @@ async def add_new_user(user: UserCreate, request: Request):
         raise HTTPException(status_code=400, detail="Username already exists")
 
 @router.delete("/api/users/{username}")
-async def delete_existing_user(username: str, request: Request):
+async def delete_existing_user(username: str, current_user = Depends(require_admin)):
     """حذف کاربر"""
-    current_user = require_admin(request)
-    
     if username == "sina":
         raise HTTPException(status_code=403, detail="Cannot delete super admin")
     if username == current_user["username"]:
