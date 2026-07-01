@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Request, Header
+from fastapi import APIRouter, Request, Header, Cookie, Response
 from fastapi.responses import HTMLResponse, RedirectResponse
 from app.services.auth_service import get_user_from_session
 import os
@@ -17,7 +17,7 @@ def read_html_file(filename: str, **kwargs):
     with open(file_path, 'r', encoding='utf-8') as f:
         content = f.read()
     
-    # جایگزینی متغیرها (برای پشتیبانی از حالت قبلی)
+    # جایگزینی متغیرها
     content = content.replace('USERNAME_PLACEHOLDER', kwargs.get('username', 'کاربر'))
     content = content.replace('SESSION_IS_ADMIN = true', f'SESSION_IS_ADMIN = {str(kwargs.get("is_admin", False)).lower()}')
     content = content.replace('SESSION_IS_SINA = false', f'SESSION_IS_SINA = {str(kwargs.get("is_sina", False)).lower()}')
@@ -30,8 +30,11 @@ async def home(request: Request):
     return read_html_file("login.html")
 
 @router.get("/dashboard", response_class=HTMLResponse)
-async def dashboard(session_id: str = Header(None)):
-    """صفحه داشبورد - با Session ID از Header"""
+async def dashboard(
+    request: Request,
+    session_id: str = Cookie(None)  # از کوکی دریافت کن
+):
+    """صفحه داشبورد - با Session ID از کوکی"""
     user = get_user_from_session(session_id)
     
     if not user:
