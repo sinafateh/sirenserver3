@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Request, HTTPException
+from fastapi import APIRouter, Request, HTTPException, Header, Depends
 from fastapi.responses import JSONResponse
 from app.models.models import NotificationCreate
 from app.services.auth_service import get_user_from_session
@@ -7,18 +7,30 @@ from app.database.database import get_all_users
 
 router = APIRouter()
 
-@router.post("/api/notifications")
-async def send_notification(request: Request, data: NotificationCreate):
-    """ارسال اعلان جدید (فقط ادمین)"""
-    session_id = request.cookies.get("session_id")
-    current_user = get_user_from_session(session_id)
-    
-    if not current_user:
+def get_current_user(session_id: str = Header(None)):
+    """دریافت کاربر فعلی از Header"""
+    if not session_id:
+        raise HTTPException(status_code=401, detail="Not authenticated")
+    user = get_user_from_session(session_id)
+    if not user:
+        raise HTTPException(status_code=401, detail="Not authenticated")
+    return user
+
+def require_admin(session_id: str = Header(None)):
+    """بررسی اینکه کاربر ادمین باشد"""
+    if not session_id:
         raise HTTPException(status_code=401, detail="Not authenticated")
     
-    if not current_user.get("is_admin"):
-        raise HTTPException(status_code=403, detail="Only admins can send notifications")
-    
+    user = get_user_from_session(session_id)
+    if not user:
+        raise HTTPException(status_code=401, detail="Not authenticated")
+    if not user.get("is_admin"):
+        raise HTTPException(status_code=403, detail="Admin access required")
+    return user
+
+@router.post("/api/notifications")
+async def send_notification(data: NotificationCreate, current_user = Depends(require_admin)):
+    """ارسال اعلان جدید (فقط ادمین)"""
     result = NotificationService.send_notification(
         sender=current_user["username"],
         receiver=data.receiver,
@@ -32,53 +44,30 @@ async def send_notification(request: Request, data: NotificationCreate):
     return JSONResponse(result)
 
 @router.get("/api/notifications")
-async def get_notifications(request: Request, limit: int = 50):
+async def get_notifications(current_user = Depends(get_current_user), limit: int = 50):
     """دریافت اعلان‌های کاربر فعلی (شامل پیام‌های ارسالی خودش)"""
-    session_id = request.cookies.get("session_id")
-    current_user = get_user_from_session(session_id)
-    
-    if not current_user:
-        raise HTTPException(status_code=401, detail="Not authenticated")
-    
     notifications = NotificationService.get_user_notifications(
         current_user["username"], 
         limit
     )
-    
     return JSONResponse(notifications)
 
 @router.get("/api/notifications/unread")
-async def get_unread_count(request: Request):
+async def get_unread_count(current_user = Depends(get_current_user)):
     """تعداد اعلان‌های خوانده نشده (فقط دریافتی)"""
-    session_id = request.cookies.get("session_id")
-    current_user = get_user_from_session(session_id)
-    
-    if not current_user:
-        raise HTTPException(status_code=401, detail="Not authenticated")
-    
     count = NotificationService.get_unread_count(current_user["username"])
     return JSONResponse({"unread_count": count})
 
 @router.post("/api/notifications/{notification_id}/read")
-async def mark_notification_read(notification_id: int, request: Request):
+async def mark_notification_read(notification_id: int, current_user = Depends(get_current_user)):
     """علامت‌گذاری اعلان به عنوان خوانده شده"""
-    session_id = request.cookies.get("session_id")
-    current_user = get_user_from_session(session_id)
-    
-    if not current_user:
-        raise HTTPException(status_code=401, detail="Not authenticated")
-    
     result = NotificationService.mark_as_read(notification_id, current_user["username"])
     return JSONResponse({"status": "success"})
 
 @router.delete("/api/notifications/{notification_id}")
-async def delete_notification_route(notification_id: int, request: Request):
+async def delete_notification_route(notification_id: int, session_id: str = Header(None)):
     """حذف پیام (کاربر عادی: فقط پیام‌های خودش/ارسالی خودش، ادمین: هر پیامی)"""
-    session_id = request.cookies.get("session_id")
-    current_user = get_user_from_session(session_id)
-    
-    if not current_user:
-        raise HTTPException(status_code=401, detail="Not authenticated")
+    current_user = get_current_user(session_id)
     
     # اگه ادمین باشه، می‌تونه هر پیامی رو حذف کنه
     if current_user.get("is_admin"):
@@ -102,17 +91,8 @@ async def delete_notification_route(notification_id: int, request: Request):
     return JSONResponse({"status": "success", "message": "Notification deleted"})
 
 @router.delete("/api/notifications/clear/all")
-async def clear_all_notifications_route(request: Request):
+async def clear_all_notifications_route(current_user = Depends(require_admin)):
     """پاک کردن همه پیام‌ها (فقط ادمین)"""
-    session_id = request.cookies.get("session_id")
-    current_user = get_user_from_session(session_id)
-    
-    if not current_user:
-        raise HTTPException(status_code=401, detail="Not authenticated")
-    
-    if not current_user.get("is_admin"):
-        raise HTTPException(status_code=403, detail="Only admins can clear all notifications")
-    
     count = NotificationService.clear_all_notifications()
     return JSONResponse({
         "status": "success", 
@@ -120,14 +100,8 @@ async def clear_all_notifications_route(request: Request):
     })
 
 @router.delete("/api/notifications/clear/my")
-async def clear_my_notifications_route(request: Request):
+async def clear_my_notifications_route(current_user = Depends(get_current_user)):
     """پاک کردن همه پیام‌های خودم (شامل ارسالی‌های خودم)"""
-    session_id = request.cookies.get("session_id")
-    current_user = get_user_from_session(session_id)
-    
-    if not current_user:
-        raise HTTPException(status_code=401, detail="Not authenticated")
-    
     count = NotificationService.clear_all_user_notifications(current_user["username"])
     return JSONResponse({
         "status": "success", 
@@ -135,17 +109,8 @@ async def clear_my_notifications_route(request: Request):
     })
 
 @router.get("/api/notifications/users")
-async def get_users_list(request: Request):
+async def get_users_list(current_user = Depends(require_admin)):
     """دریافت لیست کاربران برای انتخاب گیرنده (فقط ادمین)"""
-    session_id = request.cookies.get("session_id")
-    current_user = get_user_from_session(session_id)
-    
-    if not current_user:
-        raise HTTPException(status_code=401, detail="Not authenticated")
-    
-    if not current_user.get("is_admin"):
-        raise HTTPException(status_code=403, detail="Admin access required")
-    
     users = get_all_users()
     users = [u for u in users if u["username"] != current_user["username"]]
     return JSONResponse(users)
