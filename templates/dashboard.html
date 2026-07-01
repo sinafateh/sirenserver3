@@ -1023,31 +1023,31 @@ var updateInterval;
 function fetchData() {
   // دریافت داده‌های لحظه‌ای
   fetchWithAuth('/api/last')
-    .then(response => response.json())
-    .then(data => {
+    .then(function(response) { return response.json(); })
+    .then(function(data) {
       updateMeter(data.current, data.mode, data.limit || 50.5, data.elapsed || 0, data.over, data.testing);
     })
-    .catch(err => console.error('Error fetching live data:', err));
+    .catch(function(err) { console.error('Error fetching live data:', err); });
 
   // دریافت لیست کاربران (فقط ادمین‌ها)
   if (SESSION_IS_ADMIN) {
     fetchWithAuth('/api/users')
-      .then(response => response.json())
-      .then(users => {
+      .then(function(response) { return response.json(); })
+      .then(function(users) {
         cachedUsers = users;
         renderUserList(users);
         document.getElementById('userCountBadge').textContent = users.length + ' کاربر';
       })
-      .catch(err => console.error('Error fetching users:', err));
+      .catch(function(err) { console.error('Error fetching users:', err); });
   }
 
   // دریافت رکوردهای تست
   fetchWithAuth('/api/records')
-    .then(response => response.json())
-    .then(records => {
+    .then(function(response) { return response.json(); })
+    .then(function(records) {
       renderResults(records);
     })
-    .catch(err => console.error('Error fetching records:', err));
+    .catch(function(err) { console.error('Error fetching records:', err); });
 }
 
 function refreshData() {
