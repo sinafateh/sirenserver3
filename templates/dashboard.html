@@ -1,0 +1,1609 @@
+## 📄 فایل کامل `templates/dashboard.html` با مدیریت پیام‌های دوطرفه
+
+```html
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Siren Tester — Dashboard</title>
+<style>
+/* ═══════════════════════════════════════════
+   RESET & BASE
+═══════════════════════════════════════════ */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { font-size: 16px; }
+
+/* ═══════════════════════════════════════════
+   DARK MODE TOKENS (default)
+═══════════════════════════════════════════ */
+:root {
+  --accent: #0a84ff;
+  --accent2: #30d158;
+  --warn: #ff9f0a;
+  --danger: #ff453a;
+  --purple: #bf5af2;
+  --glass-bg: rgba(255,255,255,0.07);
+  --glass-border: rgba(255,255,255,0.16);
+  --glass-shine: rgba(255,255,255,0.20);
+  --glass-shadow: rgba(0,0,0,0.38);
+  --glass-inner: rgba(255,255,255,0.09);
+  --text: #ffffff;
+  --text2: rgba(255,255,255,0.52);
+  --text3: rgba(255,255,255,0.28);
+  --body-bg: #07091a;
+  --row-hover: rgba(255,255,255,0.04);
+  --row-border: rgba(255,255,255,0.05);
+  --input-bg: rgba(255,255,255,0.07);
+  --input-border: rgba(255,255,255,0.14);
+  --user-row-bg: rgba(255,255,255,0.04);
+  --user-row-br: rgba(255,255,255,0.08);
+  --tl-seg-div: rgba(255,255,255,0.14);
+  --tl-dot-bg: rgba(255,255,255,0.07);
+  --tl-dot-br: rgba(255,255,255,0.14);
+  --tl-bar-bg: rgba(255,255,255,0.07);
+  --badge-bg: rgba(255,255,255,0.08);
+  --badge-br: rgba(255,255,255,0.14);
+  --section-col: rgba(255,255,255,0.40);
+  --gauge-track: rgba(255,255,255,0.08);
+  --limit-bar-bg: rgba(255,255,255,0.10);
+  --type-chip-bg: rgba(255,255,255,0.07);
+  --type-chip-br: rgba(255,255,255,0.12);
+  --th-border: rgba(255,255,255,0.08);
+  --select-opt: #1a1a2e;
+  --toast-bg: rgba(28,28,40,0.88);
+  --toast-br: rgba(255,255,255,0.14);
+  --ws-pill-bg: rgba(255,255,255,0.06);
+  --ws-pill-br: rgba(255,255,255,0.12);
+  --needle-col: #ffffff;
+  --gauge-circle: #ffffff;
+  --mode-chip-bg: rgba(10,132,255,0.18);
+  --mode-chip-br: rgba(10,132,255,0.35);
+  --blur: blur(36px) saturate(180%);
+  --transition-theme: background 0.45s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* ═══════════════════════════════════════════
+   LIGHT MODE TOKENS
+═══════════════════════════════════════════ */
+body.day {
+  --glass-bg: rgba(255,248,252,0.82);
+  --glass-border: rgba(233,173,255,0.25);
+  --glass-shine: rgba(255,255,255,0.90);
+  --glass-shadow: rgba(180,130,200,0.13);
+  --glass-inner: rgba(255,240,250,0.45);
+  --text: #2d1a33;
+  --text2: rgba(60,35,70,0.55);
+  --text3: rgba(60,35,70,0.30);
+  --body-bg: linear-gradient(145deg, 
+    rgba(233,173,255,0.25) 0%, 
+    rgba(255,173,236,0.20) 20%,
+    rgba(255,173,195,0.20) 40%,
+    rgba(195,255,173,0.18) 60%,
+    rgba(173,255,233,0.22) 80%,
+    rgba(233,173,255,0.15) 100%);
+  --row-hover: rgba(233,173,255,0.12);
+  --row-border: rgba(233,173,255,0.12);
+  --input-bg: rgba(255,248,252,0.70);
+  --input-border: rgba(233,173,255,0.20);
+  --user-row-bg: rgba(255,248,252,0.60);
+  --user-row-br: rgba(233,173,255,0.14);
+  --tl-seg-div: rgba(233,173,255,0.16);
+  --tl-dot-bg: rgba(255,248,252,0.60);
+  --tl-dot-br: rgba(233,173,255,0.16);
+  --tl-bar-bg: rgba(233,173,255,0.12);
+  --badge-bg: rgba(255,248,252,0.65);
+  --badge-br: rgba(233,173,255,0.16);
+  --section-col: rgba(150,80,180,0.45);
+  --gauge-track: rgba(233,173,255,0.12);
+  --limit-bar-bg: rgba(233,173,255,0.12);
+  --type-chip-bg: rgba(255,248,252,0.60);
+  --type-chip-br: rgba(233,173,255,0.14);
+  --th-border: rgba(233,173,255,0.12);
+  --select-opt: #f8edff;
+  --toast-bg: rgba(255,248,252,0.92);
+  --toast-br: rgba(233,173,255,0.16);
+  --ws-pill-bg: rgba(255,248,252,0.60);
+  --ws-pill-br: rgba(233,173,255,0.14);
+  --needle-col: #2d1a33;
+  --gauge-circle: #2d1a33;
+  --mode-chip-bg: rgba(233,173,255,0.15);
+  --mode-chip-br: rgba(233,173,255,0.25);
+  --accent: #b06ad6;
+  --accent2: #6dcf9a;
+  --warn: #d4a06a;
+  --danger: #d96a7a;
+  --purple: #b06ad6;
+}
+
+/* ═══════════════════════════════════════════
+   BODY & BACKGROUND
+═══════════════════════════════════════════ */
+body {
+  min-height: 100vh;
+  background: var(--body-bg);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  color: var(--text);
+  overflow-x: hidden;
+  position: relative;
+  transition: var(--transition-theme);
+}
+
+.bg-canvas {
+  position: fixed; inset: 0; z-index: 0;
+  pointer-events: none; overflow: hidden;
+  transition: opacity .5s ease;
+}
+body.day .bg-canvas { opacity: 1; }
+
+.orb {
+  position: absolute; border-radius: 50%;
+  filter: blur(100px);
+  animation: drift 18s ease-in-out infinite alternate;
+  transition: opacity 0.6s ease;
+}
+
+body:not(.day) .orb1 { width:600px;height:600px; background:radial-gradient(circle,#0a4aff 0%,#0a1560 70%); top:-150px;left:-120px;animation-delay:0s;opacity:0.55; }
+body:not(.day) .orb2 { width:500px;height:500px; background:radial-gradient(circle,#00c6ff 0%,#0048a3 70%); top:30%;right:-100px;animation-delay:-6s;opacity:0.45; }
+body:not(.day) .orb3 { width:400px;height:400px; background:radial-gradient(circle,#30d158 0%,#0e3a1e 70%); bottom:-80px;left:30%;animation-delay:-11s;opacity:0.32; }
+body.day .orb1 { width:500px;height:500px; background:radial-gradient(circle,rgba(233,173,255,0.30) 0%,rgba(233,173,255,0.08) 70%); top:-120px;left:-100px;animation-delay:0s;opacity:0.7; }
+body.day .orb2 { width:450px;height:450px; background:radial-gradient(circle,rgba(255,173,236,0.25) 0%,rgba(255,173,236,0.08) 70%); top:20%;right:-80px;animation-delay:-5s;opacity:0.6; }
+body.day .orb3 { width:400px;height:400px; background:radial-gradient(circle,rgba(173,255,233,0.22) 0%,rgba(173,255,233,0.08) 70%); bottom:-60px;left:25%;animation-delay:-10s;opacity:0.5; }
+body.day .orb4 { width:380px;height:380px; background:radial-gradient(circle,rgba(195,255,173,0.20) 0%,rgba(195,255,173,0.06) 70%); top:50%;right:10%;animation-delay:-7s;opacity:0.45; }
+body.day .orb5 { width:420px;height:420px; background:radial-gradient(circle,rgba(255,173,195,0.22) 0%,rgba(255,173,195,0.06) 70%); bottom:20%;right:20%;animation-delay:-13s;opacity:0.5; }
+
+@keyframes drift { 0% { transform: translate(0,0) scale(1); } 50% { transform: translate(30px,-20px) scale(1.06); } 100% { transform: translate(-15px,25px) scale(0.97); } }
+
+/* ═══════════════════════════════════════════
+   THEME TOGGLE
+═══════════════════════════════════════════ */
+.theme-btn {
+  position: fixed; top: 18px; right: 18px; z-index: 200;
+  background: var(--glass-bg);
+  backdrop-filter: var(--blur);
+  -webkit-backdrop-filter: var(--blur);
+  border: 1px solid var(--glass-border);
+  border-radius: 50px;
+  padding: 0;
+  width: 68px; height: 34px;
+  cursor: pointer;
+  box-shadow: inset 0 1px 0 var(--glass-shine), 0 4px 16px var(--glass-shadow);
+  transition: var(--transition-theme);
+  display: flex; align-items: center;
+  overflow: hidden;
+}
+.theme-btn-track {
+  position: relative; width: 100%; height: 100%;
+  display: flex; align-items: center;
+}
+.theme-btn-knob {
+  position: absolute;
+  width: 26px; height: 26px; border-radius: 50%;
+  background: var(--text);
+  left: 4px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px;
+  transition: transform .35s cubic-bezier(.4,0,.2,1), background .3s;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.25);
+}
+body.day .theme-btn-knob { transform: translateX(34px); }
+.theme-icon-sun { position:absolute;right:10px;font-size:14px;opacity:1; transition:opacity .2s; }
+.theme-icon-moon { position:absolute;left:10px;font-size:14px;opacity:1; transition:opacity .2s; }
+body.day .theme-icon-sun { opacity:0; }
+body.day .theme-icon-moon { opacity:1; }
+body:not(.day) .theme-icon-sun { opacity:1; }
+body:not(.day) .theme-icon-moon { opacity:0; }
+
+/* ═══════════════════════════════════════════
+   MAIN LAYOUT
+═══════════════════════════════════════════ */
+.shell {
+  position: relative; z-index: 1;
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 24px 20px 56px;
+}
+
+.glass {
+  background: var(--glass-bg);
+  backdrop-filter: var(--blur);
+  -webkit-backdrop-filter: var(--blur);
+  border: 1px solid var(--glass-border);
+  border-radius: 28px;
+  box-shadow: inset 0 1px 0 var(--glass-shine), 0 20px 60px var(--glass-shadow), 0 0 0 0.5px var(--glass-inner);
+  position: relative;
+  overflow: hidden;
+  transition: var(--transition-theme);
+}
+.glass::before {
+  content: '';
+  position: absolute; inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(135deg,var(--glass-shine) 0%,transparent 55%);
+  pointer-events: none;
+}
+
+/* ═══════════════════════════════════════════
+   HEADER
+═══════════════════════════════════════════ */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 22px;
+  margin-bottom: 18px;
+  border-radius: 32px;
+  flex-wrap: wrap; gap: 12px;
+}
+.header-left { display:flex;align-items:center;gap:14px; }
+.logo-icon {
+  width:46px;height:46px;
+  background:linear-gradient(135deg,#0a84ff,#30d158);
+  border-radius:14px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:22px;
+  box-shadow:0 4px 20px rgba(10,132,255,0.45);
+  flex-shrink:0;
+}
+.logo-text h1 { font-size:19px;font-weight:650;letter-spacing:-.3px; }
+.logo-text p { font-size:11.5px;color:var(--text2);margin-top:2px; }
+.header-right { display:flex;align-items:center;gap:9px;flex-wrap:wrap; }
+
+.badge {
+  display:flex;align-items:center;gap:6px;
+  background:var(--badge-bg);
+  border:1px solid var(--badge-br);
+  border-radius:40px;
+  padding:5px 13px;
+  font-size:12.5px;font-weight:500;
+  color:var(--text);
+  transition:var(--transition-theme);
+}
+.dot-live {
+  width:7px;height:7px;border-radius:50%;
+  background:var(--accent2);
+  box-shadow:0 0 0 3px rgba(48,209,88,0.25);
+  animation:pulse 2s ease-in-out infinite;
+}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1);}50%{opacity:.65;transform:scale(1.35);}}
+
+.btn-logout {
+  background:rgba(255,69,58,0.16);
+  border:1px solid rgba(255,69,58,0.32);
+  border-radius:40px;padding:6px 15px;
+  color:var(--danger);font-size:12.5px;font-weight:500;
+  cursor:pointer;text-decoration:none;
+  transition:all .2s;
+}
+.btn-logout:hover{background:rgba(255,69,58,0.28);}
+
+/* ═══════════════════════════════════════════
+   NOTIFICATION BADGE
+═══════════════════════════════════════════ */
+.notif-badge {
+  position: relative;
+  cursor: pointer;
+}
+.notif-badge .badge-count {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background: var(--danger);
+  color: #fff;
+  border-radius: 50%;
+  padding: 2px 8px;
+  font-size: 10px;
+  font-weight: bold;
+  min-width: 18px;
+  text-align: center;
+  display: none;
+}
+.notif-badge .badge-count.show {
+  display: block;
+}
+
+/* ═══════════════════════════════════════════
+   STATE BANNER
+═══════════════════════════════════════════ */
+.state-banner {
+  padding:13px 22px;margin-bottom:18px;border-radius:22px;
+  display:flex;align-items:center;gap:14px;
+}
+.state-icon { font-size:28px;flex-shrink:0; }
+.state-label { font-size:10.5px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:1px; }
+.state-value { font-size:16px;font-weight:650;margin-top:2px; }
+.state-sub { font-size:11.5px;color:var(--text2);margin-top:3px; }
+
+/* ═══════════════════════════════════════════
+   KPI ROW
+═══════════════════════════════════════════ */
+.kpi-row {
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(138px,1fr));
+  gap:13px;margin-bottom:18px;
+}
+.kpi {
+  padding:17px 17px 15px;border-radius:22px;
+  display:flex;flex-direction:column;gap:5px;
+}
+.kpi-label { font-size:10.5px;color:var(--text2);font-weight:500;text-transform:uppercase;letter-spacing:.8px; }
+.kpi-value { font-size:29px;font-weight:280;letter-spacing:-1px;line-height:1; }
+.kpi-value span{ font-size:13px;font-weight:400;color:var(--text2);margin-right:2px; }
+.kpi-sub { font-size:11.5px;color:var(--text2); }
+.kpi-pass .kpi-value { color:var(--accent2); }
+.kpi-warn .kpi-value { color:var(--warn); }
+.kpi-info .kpi-value { color:var(--accent); }
+
+.section-title {
+  font-size:11.5px;font-weight:650;
+  color:var(--section-col);
+  text-transform:uppercase;letter-spacing:1.3px;
+  margin-bottom:10px;padding:0 4px;
+  transition:color .3s;
+}
+
+/* ═══════════════════════════════════════════
+   METER CARD
+═══════════════════════════════════════════ */
+.meter-card {
+  padding:22px;border-radius:26px;margin-bottom:18px;
+  display:grid;grid-template-columns:1fr auto;gap:20px;align-items:center;
+}
+.meter-readings{display:flex;flex-direction:column;gap:14px;}
+.mode-row{display:flex;align-items:center;gap:9px;flex-wrap:wrap;}
+.mode-chip {
+  display:inline-flex;align-items:center;
+  background:var(--mode-chip-bg);border:1px solid var(--mode-chip-br);
+  border-radius:20px;padding:3px 11px;
+  font-size:12px;font-weight:650;color:var(--accent);letter-spacing:.5px;
+  transition:all .25s;
+}
+.mode-chip.active{background:var(--accent);color:#fff;border-color:var(--accent);box-shadow:0 0 16px rgba(10,132,255,0.5);}
+.mode-chip.fail{background:var(--danger);color:#fff;border-color:var(--danger);}
+.curr-big{font-size:50px;font-weight:200;letter-spacing:-2px;line-height:1;}
+.curr-big span{font-size:21px;color:var(--text2);font-weight:300;}
+.limit-bar-wrap{display:flex;flex-direction:column;gap:5px;}
+.limit-label{font-size:11px;color:var(--text2);display:flex;justify-content:space-between;}
+.limit-bar{
+  height:6px;border-radius:10px;
+  background:var(--limit-bar-bg);overflow:hidden;width:200px;
+  transition:background .3s;
+}
+.limit-fill{
+  height:100%;border-radius:10px;
+  background:linear-gradient(90deg,var(--accent2),var(--warn));
+  transition:width .3s ease;
+}
+.limit-fill.over{background:linear-gradient(90deg,var(--warn),var(--danger));}
+.gauge-wrap{display:flex;flex-direction:column;align-items:center;gap:5px;}
+.gauge-label{font-size:11px;color:var(--text2);text-align:center;}
+svg.gauge{width:108px;height:70px;}
+
+/* ═══════════════════════════════════════════
+   TIMELINE
+═══════════════════════════════════════════ */
+.timeline-card{padding:19px 22px;border-radius:24px;margin-bottom:18px;}
+.timeline{display:flex;align-items:center;gap:0;margin-top:14px;}
+.tl-seg{flex:1;display:flex;flex-direction:column;align-items:center;position:relative;}
+.tl-seg::after{
+  content:'';position:absolute;top:14px;right:-1px;
+  width:1px;height:14px;background:var(--tl-seg-div);
+}
+.tl-seg:last-child::after{display:none;}
+.tl-dot{
+  width:28px;height:28px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:13px;font-weight:700;
+  background:var(--tl-dot-bg);border:1px solid var(--tl-dot-br);
+  color:var(--text2);transition:all .3s;position:relative;z-index:1;
+}
+.tl-dot.done {background:rgba(48,209,88,0.18);border-color:var(--accent2);color:var(--accent2);}
+.tl-dot.active{background:rgba(10,132,255,0.28);border-color:var(--accent);color:var(--accent);animation:glow .9s ease-in-out infinite alternate;}
+.tl-dot.fail {background:rgba(255,69,58,0.18);border-color:var(--danger);color:var(--danger);}
+@keyframes glow{from{box-shadow:0 0 8px rgba(10,132,255,0.38);}to{box-shadow:0 0 24px rgba(10,132,255,0.75);}}
+.tl-bar{height:4px;width:100%;margin:6px 0;background:var(--tl-bar-bg);border-radius:10px;overflow:hidden;}
+.tl-fill{height:100%;border-radius:10px;background:var(--accent);transition:width .5s linear;}
+.tl-name{font-size:10px;color:var(--text2);font-weight:500;white-space:nowrap;}
+.tl-dur {font-size:9px;color:var(--text3);margin-top:1px;}
+
+/* ═══════════════════════════════════════════
+   RESULTS TABLE
+═══════════════════════════════════════════ */
+.results-card{padding:22px;border-radius:26px;margin-bottom:18px;}
+.results-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:8px;}
+.results-count{
+  background:rgba(10,132,255,0.18);border:1px solid rgba(10,132,255,0.32);
+  border-radius:40px;padding:3px 12px;
+  font-size:13px;font-weight:650;color:var(--accent);
+}
+.tbl{width:100%;border-collapse:collapse;font-size:13px;}
+.tbl thead th{
+  padding:8px 10px;text-align:right;
+  color:var(--text2);font-size:10.5px;font-weight:650;
+  text-transform:uppercase;letter-spacing:.7px;
+  border-bottom:1px solid var(--th-border);
+}
+.tbl tbody tr{transition:background .15s;}
+.tbl tbody tr:hover{background:var(--row-hover);}
+.tbl tbody td{padding:10px;border-bottom:1px solid var(--row-border);vertical-align:middle;}
+.tbl tbody tr:last-child td{border-bottom:none;}
+.result-pass{
+  display:inline-flex;align-items:center;gap:5px;
+  background:rgba(48,209,88,0.14);border:1px solid rgba(48,209,88,0.28);
+  border-radius:20px;padding:3px 11px;
+  color:var(--accent2);font-size:12px;font-weight:650;
+}
+.result-fail{
+  display:inline-flex;align-items:center;gap:5px;
+  background:rgba(255,69,58,0.14);border:1px solid rgba(255,69,58,0.28);
+  border-radius:20px;padding:3px 11px;
+  color:var(--danger);font-size:12px;font-weight:650;
+}
+.type-chip{
+  background:var(--type-chip-bg);border:1px solid var(--type-chip-br);
+  border-radius:20px;padding:2px 9px;
+  font-size:11px;color:var(--text2);
+}
+.barcode-cell{font-family:'Courier New',monospace;font-size:12px;letter-spacing:.5px;}
+.btn-refresh{
+  background:rgba(10,132,255,0.16);border:1px solid rgba(10,132,255,0.28);
+  border-radius:40px;padding:5px 14px;color:var(--accent);font-size:12px;cursor:pointer;
+  transition:all .2s;
+}
+.btn-refresh:hover{background:rgba(10,132,255,0.28);}
+
+/* ═══════════════════════════════════════════
+   ADMIN PANEL
+═══════════════════════════════════════════ */
+.admin-card{padding:22px;border-radius:26px;margin-bottom:18px;}
+.admin-tabs{display:flex;gap:8px;margin-bottom:18px;flex-wrap:wrap;}
+.admin-tab{
+  background:var(--badge-bg);border:1px solid var(--badge-br);
+  border-radius:40px;padding:7px 18px;
+  color:var(--text2);font-size:13px;font-weight:500;
+  cursor:pointer;transition:all .2s;
+}
+.admin-tab.active{background:var(--accent);border-color:var(--accent);color:#fff;box-shadow:0 4px 14px rgba(10,132,255,0.35);}
+.admin-tab:hover{opacity:0.85;}
+
+.add-form{display:flex;flex-direction:column;gap:14px;}
+.form-row{display:flex;flex-wrap:wrap;gap:10px;}
+.form-input{
+  flex:1;min-width:140px;
+  background:var(--input-bg);
+  border:1px solid var(--input-border);
+  border-radius:40px;padding:10px 18px;
+  color:var(--text);font-size:13.5px;
+  outline:none;transition:border-color .2s,box-shadow .2s,background .3s;
+}
+.form-input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(10,132,255,0.18);}
+.form-input::placeholder{color:var(--text3);}
+.form-select{
+  background:var(--input-bg);
+  border:1px solid var(--input-border);
+  border-radius:40px;padding:10px 18px;
+  color:var(--text);font-size:13.5px;
+  outline:none;cursor:pointer;transition:all .3s;
+  appearance:none;-webkit-appearance:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='7'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23888' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:left 14px center;
+  padding-left:36px;
+}
+.form-select option{background:var(--select-opt);color:var(--text);}
+.btn-add{
+  background:linear-gradient(135deg,#0a84ff,#006ee6);
+  border:none;border-radius:40px;
+  padding:10px 22px;color:#fff;
+  font-size:13.5px;font-weight:650;cursor:pointer;
+  box-shadow:0 4px 16px rgba(10,132,255,0.38);
+  transition:all .2s;white-space:nowrap;
+}
+.btn-add:hover{transform:scale(0.97);box-shadow:0 2px 8px rgba(10,132,255,0.28);}
+
+/* ═══════════════════════════════════════════
+   USER LIST
+═══════════════════════════════════════════ */
+.user-list{display:flex;flex-direction:column;gap:9px;margin-top:4px;}
+.user-row{
+  display:flex;align-items:center;justify-content:space-between;
+  background:var(--user-row-bg);border:1px solid var(--user-row-br);
+  border-radius:18px;padding:11px 16px;
+  transition:background .2s,border-color .3s;
+}
+.user-row:hover{background:var(--row-hover);}
+.user-row-left{display:flex;align-items:center;gap:11px;flex-wrap:wrap;}
+.user-avatar{
+  width:34px;height:34px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:15px;font-weight:700;color:#fff;
+  flex-shrink:0;
+}
+.avatar-admin { background:linear-gradient(135deg,#ff9f0a,#ff6b00); }
+.avatar-op { background:linear-gradient(135deg,#0a84ff,#5e5ce6); }
+.avatar-sina { background:linear-gradient(135deg,#bf5af2,#9b33d4); }
+.user-name { font-size:14px;font-weight:550; }
+.user-meta { font-size:11px;color:var(--text2);margin-top:1px; }
+.user-role-badge{
+  font-size:11px;padding:3px 10px;border-radius:20px;
+  font-weight:650;letter-spacing:.3px;
+}
+.role-admin{ background:rgba(255,159,10,0.16);color:var(--warn);border:1px solid rgba(255,159,10,0.28); }
+.role-op { background:var(--badge-bg);color:var(--text2);border:1px solid var(--badge-br); }
+.role-sina { background:rgba(191,90,242,0.16);color:var(--purple);border:1px solid rgba(191,90,242,0.28); }
+.user-actions{display:flex;align-items:center;gap:8px;}
+.btn-del{
+  background:rgba(255,69,58,0.14);border:1px solid rgba(255,69,58,0.28);
+  border-radius:40px;padding:5px 13px;
+  color:var(--danger);font-size:12px;font-weight:500;
+  cursor:pointer;transition:all .2s;
+}
+.btn-del:hover{background:rgba(255,69,58,0.28);transform:scale(0.95);}
+.btn-del:disabled{opacity:.35;cursor:not-allowed;}
+.lock-icon{font-size:16px;color:var(--text3);opacity:0.6;}
+.empty-list{
+  text-align:center;padding:24px;
+  color:var(--text2);font-size:13px;
+}
+
+.ws-pill{
+  display:inline-flex;align-items:center;gap:5px;
+  background:var(--ws-pill-bg);border:1px solid var(--ws-pill-br);
+  border-radius:40px;padding:4px 11px;
+  font-size:11px;color:var(--text2);
+  transition:var(--transition-theme);
+}
+.ws-dot{width:6px;height:6px;border-radius:50%;background:var(--warn);}
+.ws-dot.connected{background:var(--accent2);}
+.ws-dot.error {background:var(--danger);}
+
+.toast{
+  position:fixed;top:76px;left:50%;transform:translateX(-50%);
+  background:var(--toast-bg);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);
+  border:1px solid var(--toast-br);
+  border-radius:40px;padding:12px 28px;
+  font-size:14px;font-weight:500;color:var(--text);
+  box-shadow:0 10px 40px rgba(0,0,0,0.25);
+  z-index:9999;
+  transition:opacity .4s cubic-bezier(.4,0,.2,1),transform .4s cubic-bezier(.4,0,.2,1);
+  pointer-events:none;white-space:nowrap;
+}
+.toast.hidden{opacity:0;transform:translateX(-50%) translateY(-20px);}
+.toast.show {opacity:1;transform:translateX(-50%) translateY(0);}
+.toast.t-ok {border-color:rgba(48,209,88,0.38);color:var(--accent2);}
+.toast.t-err {border-color:rgba(255,69,58,0.38);color:var(--danger);}
+
+.modal-overlay{
+  position:fixed;inset:0;z-index:500;
+  background:rgba(0,0,0,0.45);backdrop-filter:blur(8px);
+  display:flex;align-items:center;justify-content:center;
+  opacity:0;pointer-events:none;transition:opacity .25s;
+}
+.modal-overlay.show{opacity:1;pointer-events:auto;}
+.modal-box{
+  background:var(--toast-bg);backdrop-filter:blur(36px);-webkit-backdrop-filter:blur(36px);
+  border:1px solid var(--toast-br);border-radius:28px;
+  padding:28px 28px 22px;max-width:360px;width:90%;
+  box-shadow:0 20px 60px rgba(0,0,0,0.35);
+  transform:translateY(20px) scale(.96);transition:transform .3s cubic-bezier(.4,0,.2,1);
+}
+.modal-overlay.show .modal-box{transform:translateY(0) scale(1);}
+.modal-title{font-size:17px;font-weight:650;margin-bottom:10px;}
+.modal-body {font-size:14px;color:var(--text2);line-height:1.6;}
+.modal-actions{display:flex;gap:10px;margin-top:20px;justify-content:flex-end;}
+.btn-cancel{
+  background:var(--badge-bg);border:1px solid var(--badge-br);
+  border-radius:40px;padding:9px 20px;
+  color:var(--text2);font-size:13.5px;cursor:pointer;transition:all .2s;
+}
+.btn-cancel:hover{background:var(--row-hover);}
+.btn-confirm-del{
+  background:rgba(255,69,58,0.18);border:1px solid rgba(255,69,58,0.35);
+  border-radius:40px;padding:9px 20px;
+  color:var(--danger);font-size:13.5px;font-weight:600;cursor:pointer;transition:all .2s;
+}
+.btn-confirm-del:hover{background:rgba(255,69,58,0.3);}
+
+@media(max-width:640px){
+  .shell{padding:14px 12px 40px;}
+  .curr-big{font-size:38px;}
+  .limit-bar{width:150px;}
+  .header-right .badge:first-child{display:none;}
+  .kpi-value{font-size:24px;}
+  .meter-card{grid-template-columns:1fr;gap:16px;}
+  .gauge-wrap{flex-direction:row;gap:14px;align-items:center;}
+  .form-row{flex-direction:column;}
+  .theme-btn{top:12px;right:12px;width:58px;height:30px;}
+  .theme-btn-knob{width:22px;height:22px;left:3px;}
+  body.day .theme-btn-knob{transform:translateX(28px);}
+}
+
+/* ═══════════════════════════════════════════
+   NOTIFICATION ITEM ACTIONS
+═══════════════════════════════════════════ */
+.notif-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--row-border);
+    transition: background 0.2s;
+    gap: 10px;
+}
+.notif-item:hover {
+    background: var(--row-hover);
+}
+.notif-item .notif-content {
+    flex: 1;
+    cursor: pointer;
+}
+.notif-item .notif-actions {
+    display: flex;
+    gap: 6px;
+    flex-shrink: 0;
+}
+.notif-item .notif-actions button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    padding: 4px 8px;
+    border-radius: 6px;
+    transition: all 0.2s;
+    color: var(--text2);
+}
+.notif-item .notif-actions button:hover {
+    background: rgba(255,69,58,0.15);
+    color: var(--danger);
+}
+.notif-item .notif-badge-unread {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    background: var(--accent2);
+    border-radius: 50%;
+    margin-left: 8px;
+}
+.notif-item .notif-type-badge {
+    font-size: 10px;
+    padding: 2px 10px;
+    border-radius: 12px;
+    background: var(--badge-bg);
+    border: 1px solid var(--badge-br);
+    color: var(--text2);
+    margin-right: 8px;
+}
+.notif-item .notif-type-badge.own {
+    border-color: var(--accent);
+    color: var(--accent);
+}
+.notif-item .notif-type-badge.broadcast {
+    border-color: var(--purple);
+    color: var(--purple);
+}
+</style>
+</head>
+<body>
+
+<!-- ── Ambient background ── -->
+<div class="bg-canvas">
+  <div class="orb orb1"></div>
+  <div class="orb orb2"></div>
+  <div class="orb orb3"></div>
+  <div class="orb orb4"></div>
+  <div class="orb orb5"></div>
+</div>
+
+<!-- ── Theme Toggle ── -->
+<button class="theme-btn" id="themeBtn" title="تغییر تم" onclick="toggleTheme()">
+  <div class="theme-btn-track">
+    <span class="theme-icon-moon">🌙</span>
+    <span class="theme-icon-sun">☀️</span>
+    <div class="theme-btn-knob"></div>
+  </div>
+</button>
+
+<!-- ── Toast ── -->
+<div id="toast" class="toast hidden"></div>
+
+<!-- ── Confirm Modal ── -->
+<div class="modal-overlay" id="confirmModal">
+  <div class="modal-box">
+    <div class="modal-title" id="modalTitle">⚠️ حذف کاربر</div>
+    <div class="modal-body" id="modalBody">آیا مطمئن هستید؟</div>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeModal()">انصراف</button>
+      <button class="btn-confirm-del" id="modalConfirm">🗑️ حذف</button>
+    </div>
+  </div>
+</div>
+
+<div class="shell">
+
+  <!-- ══ HEADER ══ -->
+  <header class="glass header">
+    <div class="header-left">
+      <div class="logo-icon">🚨</div>
+      <div class="logo-text">
+        <h1>Siren Tester</h1>
+        <p>سیستم تست کنترل سایرن — v2.0</p>
+      </div>
+    </div>
+    <div class="header-right">
+      <div class="badge"><div class="dot-live"></div>Live</div>
+      <div class="ws-pill"><div class="ws-dot" id="wsDot"></div><span id="wsLabel">🟢 متصل (API)</span></div>
+      <div class="badge notif-badge" id="notifBadgeContainer" onclick="scrollToNotifications()">
+        📨
+        <span class="badge-count" id="notifBadgeCount">0</span>
+      </div>
+      <div class="badge" id="userBadge">👤 USERNAME</div>
+      <div class="badge" id="roleBadge">👑 ادمین ارشد</div>
+      <button class="btn-logout" onclick="logout()">🚪 خروج</button>
+    </div>
+  </header>
+
+  <!-- ══ STATE BANNER ══ -->
+  <div class="glass state-banner">
+    <div class="state-icon" id="stateIcon">⏳</div>
+    <div>
+      <div class="state-label">وضعیت سیستم</div>
+      <div class="state-value" id="stateValue">در انتظار داده</div>
+      <div class="state-sub" id="stateSub">اتصال به سرور...</div>
+    </div>
+  </div>
+
+  <!-- ══ KPI ROW ══ -->
+  <div class="kpi-row">
+    <div class="glass kpi kpi-info">
+      <div class="kpi-label">تعداد رکوردها</div>
+      <div class="kpi-value" id="kpiRecords">0</div>
+      <div class="kpi-sub">از ۳۰ حداکثر</div>
+    </div>
+    <div class="glass kpi kpi-pass">
+      <div class="kpi-label">جریان Mode 2</div>
+      <div class="kpi-value" id="kpiM2">—<span>mA</span></div>
+      <div class="kpi-sub">حد مجاز: ۵۰.۵ mA</div>
+    </div>
+    <div class="glass kpi kpi-warn">
+      <div class="kpi-label">جریان Mode 3</div>
+      <div class="kpi-value" id="kpiM3">—<span>mA</span></div>
+      <div class="kpi-sub">حد مجاز: ۱۶۰ mA</div>
+    </div>
+    <div class="glass kpi">
+      <div class="kpi-label">نوع سایرن</div>
+      <div class="kpi-value" id="kpiType" style="font-size:21px;font-weight:500;">—</div>
+      <div class="kpi-sub">BTN1/BTN2 انتخاب</div>
+    </div>
+  </div>
+
+  <!-- ══ CURRENT METER ══ -->
+  <div class="section-title">🔌 اندازه‌گیری جریان</div>
+  <div class="glass meter-card">
+    <div class="meter-readings">
+      <div>
+        <div style="font-size:11.5px;color:var(--text2);margin-bottom:8px;font-weight:600;text-transform:uppercase;letter-spacing:.7px;">MODE فعال</div>
+        <div class="mode-row">
+          <div class="mode-chip" id="m1">M1</div>
+          <div class="mode-chip" id="m2">M2</div>
+          <div class="mode-chip" id="m3">M3</div>
+          <div class="mode-chip" id="m4">M4</div>
+        </div>
+      </div>
+      <div>
+        <div style="font-size:11.5px;color:var(--text2);margin-bottom:4px;">جریان لحظه‌ای</div>
+        <div class="curr-big" id="currBig">0.0<span> mA</span></div>
+      </div>
+      <div class="limit-bar-wrap">
+        <div class="limit-label"><span>۰ mA</span><span id="limitLabel">حد: ۵۰.۵ mA</span></div>
+        <div class="limit-bar"><div class="limit-fill" id="limitFill" style="width:0%"></div></div>
+      </div>
+    </div>
+    <div class="gauge-wrap">
+      <svg class="gauge" viewBox="0 0 110 70">
+        <defs>
+          <linearGradient id="gGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="#30d158"/>
+            <stop offset="65%" stop-color="#ff9f0a"/>
+            <stop offset="100%" stop-color="#ff453a"/>
+          </linearGradient>
+        </defs>
+        <path d="M10,65 A45,45 0 0,1 100,65" fill="none" stroke="rgba(128,128,128,0.15)" stroke-width="9" stroke-linecap="round"/>
+        <path d="M10,65 A45,45 0 0,1 100,65" fill="none" stroke="url(#gGrad)" stroke-width="9" stroke-linecap="round" stroke-dasharray="141.4" stroke-dashoffset="141.4" id="gaugeArc" style="transition:stroke-dashoffset .4s ease"/>
+        <line id="gaugeNeedle" x1="55" y1="65" x2="55" y2="24" stroke-width="2" stroke-linecap="round" transform="rotate(-90, 55, 65)" style="transition:transform .4s ease"/>
+        <circle cx="55" cy="65" r="4" id="gaugeCircle"/>
+      </svg>
+      <div class="gauge-label" id="gaugeLabel">۰٪ بار</div>
+    </div>
+  </div>
+
+  <!-- ══ TIMELINE ══ -->
+  <div class="section-title">⏱ تایم‌لاین تست</div>
+  <div class="glass timeline-card">
+    <div style="display:flex;align-items:center;justify-content:space-between;">
+      <div style="font-size:13px;font-weight:550;">پیشرفت تست</div>
+      <div style="font-size:12px;color:var(--text2);" id="elapsedTime">۰ ثانیه</div>
+    </div>
+    <div class="timeline">
+      <div class="tl-seg">
+        <div class="tl-dot" id="tl1">1</div>
+        <div class="tl-bar"><div class="tl-fill" id="tl1f" style="width:0%"></div></div>
+        <div class="tl-name">آماده‌سازی</div><div class="tl-dur">۳ ثانیه</div>
+      </div>
+      <div class="tl-seg">
+        <div class="tl-dot" id="tl2">2</div>
+        <div class="tl-bar"><div class="tl-fill" id="tl2f" style="width:0%"></div></div>
+        <div class="tl-name">تست M2</div><div class="tl-dur">۷ ثانیه</div>
+      </div>
+      <div class="tl-seg">
+        <div class="tl-dot" id="tl3">3</div>
+        <div class="tl-bar"><div class="tl-fill" id="tl3f" style="width:0%"></div></div>
+        <div class="tl-name">تست M3</div><div class="tl-dur">۷ ثانیه</div>
+      </div>
+      <div class="tl-seg">
+        <div class="tl-dot" id="tl4">4</div>
+        <div class="tl-bar"><div class="tl-fill" id="tl4f" style="width:0%"></div></div>
+        <div class="tl-name">پایان‌بندی</div><div class="tl-dur">۳ ثانیه</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ RESULTS TABLE ══ -->
+  <div class="section-title">📋 نتایج آزمون</div>
+  <div class="glass results-card">
+    <div class="results-header">
+      <div style="font-size:15px;font-weight:600;">آخرین آزمون‌ها</div>
+      <div style="display:flex;gap:8px;align-items:center;">
+        <div class="results-count" id="recCount">۰ رکورد</div>
+        <button class="btn-refresh" onclick="refreshData()">↻ بروزرسانی</button>
+      </div>
+    </div>
+    <div style="overflow-x:auto;">
+      <table class="tbl">
+        <thead>
+          <tr>
+            <th>بارکد</th><th>اپراتور</th><th>نوع</th>
+            <th>M2 (mA)</th><th>M3 (mA)</th><th>نتیجه</th><th>زمان</th>
+          </tr>
+        </thead>
+        <tbody id="resultsBody">
+          <tr><td colspan="7" style="text-align:center;color:var(--text2);padding:24px;">در حال بارگذاری...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ══ ADMIN PANEL ══ -->
+  <div id="adminPanel" style="display:none">
+    <div class="section-title">👥 مدیریت کاربران</div>
+    <div class="glass admin-card">
+
+      <div class="admin-tabs">
+        <button class="admin-tab active" onclick="switchTab('add')" id="tabAdd">➕ افزودن کاربر</button>
+        <button class="admin-tab" onclick="switchTab('list')" id="tabList">📋 لیست کاربران</button>
+      </div>
+
+      <div id="tabPanelAdd">
+        <div class="add-form" id="addUserForm">
+          <div class="form-row">
+            <input type="text" class="form-input" id="newUsername" placeholder="نام کاربری" autocomplete="off">
+            <input type="password" class="form-input" id="newPassword" placeholder="رمز عبور">
+            <select class="form-select" id="newRole">
+              <option value="0">👤 اپراتور</option>
+              <option value="1">⭐ ادمین</option>
+            </select>
+            <button class="btn-add" onclick="submitAddUser()">+ افزودن</button>
+          </div>
+          <div style="font-size:12px;color:var(--text2);padding:0 4px;line-height:1.6;">
+            ⚠️ <strong>ادمین ارشد (sina)</strong> می‌تواند هر کاربری (به جز خودش) را حذف کند.<br>
+            ⭐ ادمین‌های عادی فقط می‌توانند اپراتورها را حذف کنند.
+          </div>
+        </div>
+      </div>
+
+      <div id="tabPanelList" style="display:none">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:8px;">
+          <div style="font-size:13px;font-weight:550;">کاربران ثبت‌شده</div>
+          <div style="display:flex;gap:6px;">
+            <span style="font-size:11px;color:var(--text2);background:var(--badge-bg);border:1px solid var(--badge-br);padding:3px 10px;border-radius:20px;" id="userCountBadge">۰ کاربر</span>
+          </div>
+        </div>
+        <div style="display:flex;gap:7px;margin-bottom:12px;flex-wrap:wrap;">
+          <button class="admin-tab active" style="font-size:11.5px;padding:5px 14px;" onclick="setUserFilter('all',this)" id="filterAll">👥 همه</button>
+          <button class="admin-tab" style="font-size:11.5px;padding:5px 14px;" onclick="setUserFilter('admin',this)" id="filterAdmin">👑 ادمین‌ها</button>
+          <button class="admin-tab" style="font-size:11.5px;padding:5px 14px;" onclick="setUserFilter('op',this)" id="filterOp">👤 اپراتورها</button>
+        </div>
+        <div class="user-list" id="userList">
+          <div class="empty-list">در حال بارگذاری...</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ══ NOTIFICATION CENTER ══ -->
+  <div class="section-title" id="notificationsSection">📨 مرکز اعلان‌ها</div>
+  
+  <!-- بخش ارسال پیام (فقط ادمین) -->
+  <div id="adminNotificationPanel" style="display:none">
+    <div class="glass admin-card" style="margin-bottom:18px;">
+      <div class="add-form">
+        <div class="form-row">
+          <select class="form-select" id="notificationReceiver" style="flex:1;min-width:140px;">
+            <option value="ALL">📢 همه کاربران</option>
+          </select>
+        </div>
+        <div class="form-row">
+          <input type="text" class="form-input" id="notificationTitle" placeholder="عنوان پیام" style="flex:1;min-width:200px;">
+        </div>
+        <div class="form-row">
+          <textarea class="form-input" id="notificationMessage" placeholder="متن پیام..." rows="3" style="flex:1;min-width:200px;resize:vertical;border-radius:20px;"></textarea>
+        </div>
+        <div class="form-row">
+          <button class="btn-add" onclick="sendNotification()">📨 ارسال پیام</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- لیست اعلان‌ها -->
+  <div class="glass results-card">
+    <div class="results-header">
+      <div style="display:flex;align-items:center;gap:12px;">
+        <div style="font-size:15px;font-weight:600;">📬 پیام‌های دریافتی</div>
+        <div class="results-count" id="notifCount">۰ پیام</div>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+        <button class="btn-refresh" onclick="loadNotifications()">↻ بروزرسانی</button>
+        <button class="btn-refresh" onclick="clearAllMyNotifications()" style="color:var(--danger);border-color:rgba(255,69,58,0.32);">
+          🗑️ پاک کردن همه
+        </button>
+        <button class="btn-refresh" onclick="clearAllNotifications()" id="clearAllAdminBtn" style="display:none;color:var(--danger);border-color:rgba(255,69,58,0.32);">
+          🗑️ پاک کردن کل پیام‌ها
+        </button>
+      </div>
+    </div>
+    <div id="notificationsList">
+      <div style="text-align:center;color:var(--text2);padding:24px;">📭 در حال بارگذاری...</div>
+    </div>
+  </div>
+
+</div><!-- /shell -->
+
+<script>
+// ═══════════════════════════════════════════
+// CONFIG
+// ═══════════════════════════════════════════
+var SESSION_USERNAME = 'USERNAME_PLACEHOLDER';
+var SESSION_IS_ADMIN = true;
+var SESSION_IS_SINA = false;
+
+// ═══════════════════════════════════════════
+// THEME
+// ═══════════════════════════════════════════
+function toggleTheme() {
+  var isDay = document.body.classList.toggle('day');
+  localStorage.setItem('siren-theme', isDay ? 'day' : 'night');
+  updateGaugeColors();
+}
+(function() {
+  if (localStorage.getItem('siren-theme') === 'day') document.body.classList.add('day');
+})();
+
+function updateGaugeColors() {
+  var isDay = document.body.classList.contains('day');
+  var col = isDay ? '#2d1a33' : '#ffffff';
+  var needle = document.getElementById('gaugeNeedle');
+  var circle = document.getElementById('gaugeCircle');
+  if (needle) needle.setAttribute('stroke', col);
+  if (circle) circle.setAttribute('fill', col);
+}
+
+// ═══════════════════════════════════════════
+// DATA FETCHING (HTTP API)
+// ═══════════════════════════════════════════
+var cachedUsers = [];
+var userFilter = 'all';
+var updateInterval;
+
+function fetchData() {
+  // دریافت داده‌های لحظه‌ای
+  fetch('/api/last')
+    .then(response => response.json())
+    .then(data => {
+      updateMeter(data.current, data.mode, data.limit || 50.5, data.elapsed || 0, data.over, data.testing);
+    })
+    .catch(err => console.error('Error fetching live data:', err));
+
+  // دریافت لیست کاربران (فقط ادمین‌ها)
+  if (SESSION_IS_ADMIN) {
+    fetch('/api/users')
+      .then(response => response.json())
+      .then(users => {
+        cachedUsers = users;
+        renderUserList(users);
+        document.getElementById('userCountBadge').textContent = users.length + ' کاربر';
+      })
+      .catch(err => console.error('Error fetching users:', err));
+  }
+
+  // دریافت رکوردهای تست
+  fetch('/api/records')
+    .then(response => response.json())
+    .then(records => {
+      renderResults(records);
+    })
+    .catch(err => console.error('Error fetching records:', err));
+}
+
+function refreshData() {
+  fetchData();
+  loadNotifications();
+  document.getElementById('wsDot').className = 'ws-dot connected';
+  document.getElementById('wsLabel').textContent = '🟢 متصل (API)';
+}
+
+// ═══════════════════════════════════════════
+// LIVE METER UPDATE
+// ═══════════════════════════════════════════
+function updateMeter(current, mode, limit, elapsed, over, testing) {
+  // Update mode chips
+  ['m1','m2','m3','m4'].forEach(function(id, idx) {
+    var el = document.getElementById(id);
+    el.className = 'mode-chip';
+    if (idx + 1 === mode) {
+      el.className = 'mode-chip' + (over ? ' fail' : ' active');
+    }
+  });
+
+  // Update current display
+  document.getElementById('currBig').innerHTML = current.toFixed(1) + '<span> mA</span>';
+  document.getElementById('limitLabel').textContent = 'حد: ' + limit.toFixed(1) + ' mA';
+
+  // Update limit bar
+  var pct = Math.min((current / limit) * 100, 100);
+  var fill = document.getElementById('limitFill');
+  fill.style.width = pct.toFixed(1) + '%';
+  fill.className = 'limit-fill' + (current > limit ? ' over' : '');
+
+  // Update gauge
+  var total = 141.4;
+  var arc = document.getElementById('gaugeArc');
+  var needle = document.getElementById('gaugeNeedle');
+  var gaugePct = Math.min(current / limit, 1.0);
+  arc.setAttribute('stroke-dashoffset', (total * (1 - gaugePct)).toFixed(1));
+  var angle = -90 + (gaugePct * 180);
+  needle.setAttribute('transform', 'rotate(' + angle + ', 55, 65)');
+  document.getElementById('gaugeLabel').textContent = Math.round(gaugePct * 100) + '٪ بار';
+
+  // Update timeline
+  updateTimeline(elapsed);
+
+  // Update state banner
+  if (testing) {
+    var modes = ['آماده‌سازی', 'تست M2', 'تست M3', 'پایان‌بندی'];
+    var icons = ['⚡', '🔊', '📡', '✅'];
+    var idx = mode - 1;
+    if (idx >= 0 && idx < modes.length) {
+      setStateBanner(icons[idx], '🔄 در حال تست', modes[idx] + ' — جریان: ' + current.toFixed(1) + ' mA');
+    }
+  } else {
+    setStateBanner('🏁', '✅ آماده', 'در انتظار شروع تست جدید');
+  }
+}
+
+function updateTimeline(elapsed) {
+  var segs = [
+    {start:0, end:3,  fi:'tl1f', di:'tl1'},
+    {start:3, end:10, fi:'tl2f', di:'tl2'},
+    {start:10,end:17, fi:'tl3f', di:'tl3'},
+    {start:17,end:20, fi:'tl4f', di:'tl4'},
+  ];
+  segs.forEach(function(s) {
+    var dot  = document.getElementById(s.di);
+    var fill = document.getElementById(s.fi);
+    if (elapsed >= s.end) {
+      dot.className = 'tl-dot done'; fill.style.width = '100%';
+    } else if (elapsed >= s.start) {
+      dot.className = 'tl-dot active';
+      fill.style.width = ((elapsed - s.start)/(s.end - s.start)*100).toFixed(1)+'%';
+    } else {
+      dot.className = 'tl-dot'; fill.style.width = '0%';
+    }
+  });
+  document.getElementById('elapsedTime').textContent = elapsed.toFixed(0)+' ثانیه';
+}
+
+function setStateBanner(icon, title, sub) {
+  document.getElementById('stateIcon').textContent = icon;
+  document.getElementById('stateValue').textContent = title;
+  document.getElementById('stateSub').textContent  = sub;
+}
+
+// ═══════════════════════════════════════════
+// RESULTS
+// ═══════════════════════════════════════════
+function renderResults(data) {
+  var tb  = document.getElementById('resultsBody');
+  var cnt = document.getElementById('recCount');
+  cnt.textContent = data.length + ' رکورد';
+  document.getElementById('kpiRecords').textContent = data.length;
+
+  if (!data || !data.length) {
+    tb.innerHTML = '<tr><td colspan="7" style="text-align:center;color:var(--text2);padding:28px;">📭 هنوز نتیجه‌ای ثبت نشده</td></tr>';
+    return;
+  }
+  tb.innerHTML = '';
+  for (var i = data.length - 1; i >= 0; i--) {
+    var r = data[i];
+    var dt = new Date(r.timestamp);
+    var m2 = (parseFloat(r.max_mode2) || 0).toFixed(1);
+    var m3 = (parseFloat(r.max_mode3) || 0).toFixed(1);
+    var tr = document.createElement('tr');
+    tr.innerHTML =
+      '<td class="barcode-cell">' + (r.barcode||'—') + '</td>' +
+      '<td>' + (r.operator||'—') + '</td>' +
+      '<td><span class="type-chip">' + (r.flasher_type ? 'FLASHER' : 'NORMAL') + '</span></td>' +
+      '<td>' + m2 + '</td>' +
+      '<td>' + m3 + '</td>' +
+      '<td>' + (r.passed ? '<span class="result-pass">✅ قبول</span>' : '<span class="result-fail">❌ رد</span>') + '</td>' +
+      '<td style="color:var(--text2);font-size:11.5px;">' + new Date(r.timestamp).toLocaleTimeString('fa-IR') + '</td>';
+    tb.appendChild(tr);
+  }
+  var latest = data[data.length - 1];
+  if (latest) {
+    document.getElementById('kpiM2').innerHTML = (parseFloat(latest.max_mode2) || 0).toFixed(1) + '<span>mA</span>';
+    document.getElementById('kpiM3').innerHTML = (parseFloat(latest.max_mode3) || 0).toFixed(1) + '<span>mA</span>';
+    document.getElementById('kpiType').textContent = latest.flasher_type ? 'FLASHER' : 'NORMAL';
+  }
+}
+
+// ═══════════════════════════════════════════
+// USER MANAGEMENT (فقط ادمین‌ها)
+// ═══════════════════════════════════════════
+function setUserFilter(f, btn) {
+  userFilter = f;
+  document.querySelectorAll('#tabPanelList .admin-tab').forEach(function(b){ b.classList.remove('active'); });
+  btn.classList.add('active');
+  renderUserList(cachedUsers);
+}
+
+function renderUserList(users) {
+  var list = document.getElementById('userList');
+  var countBadge = document.getElementById('userCountBadge');
+  if (!list) return;
+
+  var filtered = users.filter(function(u) {
+    if (userFilter === 'admin') return u.is_admin;
+    if (userFilter === 'op')    return !u.is_admin;
+    return true;
+  });
+
+  countBadge.textContent = users.length + ' کاربر';
+  list.innerHTML = '';
+
+  if (!filtered.length) {
+    list.innerHTML = '<div class="empty-list">📭 کاربری یافت نشد</div>';
+    return;
+  }
+
+  filtered.forEach(function(u) {
+    var isSina  = (u.username === 'sina');
+    var isAdmin = u.is_admin;
+    
+    var canDelete = false;
+    if (SESSION_IS_SINA && !isSina) {
+      canDelete = true;
+    } else if (SESSION_IS_ADMIN && !SESSION_IS_SINA && !isAdmin) {
+      canDelete = true;
+    }
+
+    var avatarClass = isSina ? 'avatar-sina' : (isAdmin ? 'avatar-admin' : 'avatar-op');
+    var roleBadgeClass = isSina ? 'role-sina' : (isAdmin ? 'role-admin' : 'role-op');
+    var roleLabel = isSina ? '👑 ادمین ارشد' : (isAdmin ? '⭐ ادمین' : '👤 اپراتور');
+
+    var lockNote = '';
+    if (isSina && !SESSION_IS_SINA) {
+      lockNote = '<span class="lock-icon" title="🔒 فقط ادمین ارشد می‌تواند این کاربر را حذف کند">🔒</span>';
+    } else if (isAdmin && !SESSION_IS_SINA && SESSION_IS_ADMIN) {
+      lockNote = '<span class="lock-icon" title="🔒 فقط ادمین ارشد می‌تواند ادمین‌ها را حذف کند">🔒</span>';
+    }
+
+    var div = document.createElement('div');
+    div.className = 'user-row';
+    div.innerHTML =
+      '<div class="user-row-left">' +
+        '<div class="user-avatar ' + avatarClass + '">' + u.username.charAt(0).toUpperCase() + '</div>' +
+        '<div>' +
+          '<div class="user-name">' + u.username + (isSina ? ' <span style="font-size:11px;color:var(--purple)">👑 ارشد</span>' : '') + '</div>' +
+          '<div class="user-meta">' + (isAdmin ? '🔑 دسترسی کامل' : '📋 دسترسی محدود') + '</div>' +
+        '</div>' +
+        '<span class="user-role-badge ' + roleBadgeClass + '">' + roleLabel + '</span>' +
+      '</div>' +
+      '<div class="user-actions">' +
+        lockNote +
+        (canDelete
+          ? '<button class="btn-del" onclick="confirmDelete(\'' + u.username + '\')">🗑️ حذف</button>'
+          : '') +
+      '</div>';
+    list.appendChild(div);
+  });
+}
+
+var pendingDeleteUser = null;
+
+function confirmDelete(username) {
+  pendingDeleteUser = username;
+  document.getElementById('modalTitle').textContent = '⚠️ حذف کاربر';
+  document.getElementById('modalBody').textContent = 'آیا مطمئن هستید که می‌خواهید کاربر «' + username + '» را حذف کنید؟';
+  document.getElementById('confirmModal').classList.add('show');
+}
+
+function closeModal() {
+  pendingDeleteUser = null;
+  document.getElementById('confirmModal').classList.remove('show');
+}
+
+document.getElementById('modalConfirm').onclick = function() {
+  if (!pendingDeleteUser) return;
+  var u = pendingDeleteUser;
+  closeModal();
+  
+  fetch('/api/users/' + encodeURIComponent(u), { method: 'DELETE' })
+    .then(function(r) {
+      if (r.ok) {
+        showToast('🗑️ کاربر «' + u + '» با موفقیت حذف شد', 'ok');
+        fetchData();
+      } else {
+        r.json().then(function(err) {
+          showToast('❌ ' + (err.detail || 'خطا در حذف کاربر'), 'err');
+        });
+      }
+    })
+    .catch(function() { showToast('❌ خطای شبکه', 'err'); });
+};
+
+function submitAddUser() {
+  var uname = document.getElementById('newUsername').value.trim();
+  var pass  = document.getElementById('newPassword').value;
+  var role  = parseInt(document.getElementById('newRole').value);
+
+  if (!uname || !pass) { showToast('⚠️ نام کاربری و رمز عبور الزامی است', 'err'); return; }
+  if (uname.length < 3) { showToast('⚠️ نام کاربری باید حداقل ۳ کاراکتر باشد', 'err'); return; }
+  if (uname === 'sina') { showToast('⚠️ نام کاربری "sina" رزرو شده است', 'err'); return; }
+
+  fetch('/api/users', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ username: uname, password: pass, is_admin: role === 1 })
+  })
+    .then(function(r) {
+      if (r.ok) {
+        showToast('✅ کاربر «' + uname + '» با موفقیت اضافه شد', 'ok');
+        document.getElementById('newUsername').value = '';
+        document.getElementById('newPassword').value = '';
+        document.getElementById('newRole').value = '0';
+        fetchData();
+      } else {
+        r.json().then(function(err) {
+          showToast('❌ ' + (err.detail || 'خطا در افزودن کاربر'), 'err');
+        });
+      }
+    })
+    .catch(function() { showToast('❌ خطای شبکه', 'err'); });
+}
+
+function switchTab(tab) {
+  var isAdd = (tab === 'add');
+  document.getElementById('tabPanelAdd').style.display  = isAdd ? 'block' : 'none';
+  document.getElementById('tabPanelList').style.display = isAdd ? 'none'  : 'block';
+  document.getElementById('tabAdd').classList.toggle('active', isAdd);
+  document.getElementById('tabList').classList.toggle('active', !isAdd);
+  if (!isAdd) fetchData();
+}
+
+// ═══════════════════════════════════════════
+// NOTIFICATIONS
+// ═══════════════════════════════════════════
+
+function loadNotifications() {
+    fetch('/api/notifications')
+        .then(function(response) { return response.json(); })
+        .then(function(notifications) {
+            renderNotifications(notifications);
+            updateUnreadBadge(notifications);
+        })
+        .catch(function(err) { console.error('Error loading notifications:', err); });
+}
+
+function renderNotifications(notifications) {
+    var container = document.getElementById('notificationsList');
+    var countEl = document.getElementById('notifCount');
+    
+    countEl.textContent = notifications.length + ' پیام';
+    
+    if (!notifications || !notifications.length) {
+        container.innerHTML = '<div style="text-align:center;color:var(--text2);padding:24px;">📭 هیچ پیامی وجود ندارد</div>';
+        return;
+    }
+    
+    var html = '';
+    notifications.forEach(function(n) {
+        var isRead = n.is_read ? '' : 'unread';
+        var isAdmin = n.sender === 'sina' ? '👑 ' : '';
+        var date = new Date(n.created_at);
+        var dateStr = date.toLocaleDateString('fa-IR') + ' ' + date.toLocaleTimeString('fa-IR');
+        
+        // مشخص کردن نوع پیام (دریافتی یا ارسالی)
+        var typeBadge = '';
+        if (n.is_own) {
+            typeBadge = '<span class="notif-type-badge own">📤 ارسال شده توسط شما</span>';
+        } else if (n.is_broadcast) {
+            typeBadge = '<span class="notif-type-badge broadcast">📢 همگانی</span>';
+        } else {
+            typeBadge = '<span class="notif-type-badge">📩 خصوصی</span>';
+        }
+        
+        html += `
+            <div class="notif-item ${isRead}">
+                <div class="notif-content" onclick="markAsRead(${n.id})">
+                    <div class="notif-title">
+                        ${!n.is_read && !n.is_own ? '<span class="notif-badge-unread"></span>' : ''}
+                        ${n.title}
+                        ${typeBadge}
+                    </div>
+                    <div class="notif-message">${n.message}</div>
+                    <div class="notif-meta">
+                        ${isAdmin}${n.sender} • ${dateStr}
+                        ${n.is_broadcast ? ' • 📢 همگانی' : ''}
+                        ${n.is_own ? ' • ✏️ شما ارسال کردید' : ''}
+                    </div>
+                </div>
+                <div class="notif-actions">
+                    <button onclick="deleteNotification(${n.id})" title="حذف پیام">🗑️</button>
+                </div>
+            </div>
+        `;
+    });
+    
+    container.innerHTML = html;
+}
+
+function updateUnreadBadge(notifications) {
+    fetch('/api/notifications/unread')
+        .then(function(response) { return response.json(); })
+        .then(function(data) {
+            var badge = document.getElementById('notifBadgeCount');
+            var container = document.getElementById('notifBadgeContainer');
+            if (data.unread_count > 0) {
+                badge.textContent = data.unread_count;
+                badge.className = 'badge-count show';
+            } else {
+                badge.className = 'badge-count';
+            }
+        })
+        .catch(function(err) { console.error('Error getting unread count:', err); });
+}
+
+function markAsRead(notificationId) {
+    fetch('/api/notifications/' + notificationId + '/read', { method: 'POST' })
+        .then(function() {
+            loadNotifications();
+        })
+        .catch(function(err) { console.error('Error marking as read:', err); });
+}
+
+function scrollToNotifications() {
+    document.getElementById('notificationsSection').scrollIntoView({ behavior: 'smooth' });
+}
+
+// ═══════════════════════════════════════════
+// DELETE NOTIFICATIONS
+// ═══════════════════════════════════════════
+
+function deleteNotification(notificationId) {
+    if (!confirm('آیا مطمئن هستید که می‌خواهید این پیام را حذف کنید؟')) return;
+    
+    fetch('/api/notifications/' + notificationId, { method: 'DELETE' })
+        .then(function(response) {
+            if (response.ok) {
+                showToast('🗑️ پیام با موفقیت حذف شد', 'ok');
+                loadNotifications();
+            } else {
+                response.json().then(function(err) {
+                    showToast('❌ ' + (err.detail || 'خطا در حذف پیام'), 'err');
+                });
+            }
+        })
+        .catch(function(err) {
+            showToast('❌ خطا در ارتباط با سرور', 'err');
+        });
+}
+
+function clearAllMyNotifications() {
+    if (!confirm('آیا مطمئن هستید که می‌خواهید همه پیام‌های خود را حذف کنید؟')) return;
+    
+    fetch('/api/notifications/clear/my', { method: 'DELETE' })
+        .then(function(response) {
+            if (response.ok) {
+                response.json().then(function(data) {
+                    showToast('🗑️ ' + data.message, 'ok');
+                    loadNotifications();
+                });
+            } else {
+                showToast('❌ خطا در پاک کردن پیام‌ها', 'err');
+            }
+        })
+        .catch(function(err) {
+            showToast('❌ خطا در ارتباط با سرور', 'err');
+        });
+}
+
+function clearAllNotifications() {
+    if (!confirm('⚠️ آیا مطمئن هستید که می‌خواهید ALL پیام‌ها را حذف کنید؟ این عمل قابل بازگشت نیست!')) return;
+    
+    fetch('/api/notifications/clear/all', { method: 'DELETE' })
+        .then(function(response) {
+            if (response.ok) {
+                response.json().then(function(data) {
+                    showToast('🗑️ ' + data.message, 'ok');
+                    loadNotifications();
+                });
+            } else {
+                showToast('❌ خطا در پاک کردن پیام‌ها', 'err');
+            }
+        })
+        .catch(function(err) {
+            showToast('❌ خطا در ارتباط با سرور', 'err');
+        });
+}
+
+// ═══════════════════════════════════════════
+// SEND NOTIFICATION (Admin only)
+// ═══════════════════════════════════════════
+
+function sendNotification() {
+    var receiver = document.getElementById('notificationReceiver').value;
+    var title = document.getElementById('notificationTitle').value.trim();
+    var message = document.getElementById('notificationMessage').value.trim();
+    
+    if (!title || !message) {
+        showToast('⚠️ لطفاً عنوان و متن پیام را وارد کنید', 'err');
+        return;
+    }
+    
+    fetch('/api/notifications', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            receiver: receiver,
+            title: title,
+            message: message
+        })
+    })
+    .then(function(response) {
+        if (response.ok) {
+            showToast('✅ پیام با موفقیت ارسال شد', 'ok');
+            document.getElementById('notificationTitle').value = '';
+            document.getElementById('notificationMessage').value = '';
+            loadNotifications();
+        } else {
+            response.json().then(function(err) {
+                showToast('❌ ' + (err.detail || 'خطا در ارسال پیام'), 'err');
+            });
+        }
+    })
+    .catch(function(err) {
+        showToast('❌ خطا در ارتباط با سرور', 'err');
+    });
+}
+
+// ═══════════════════════════════════════════
+// LOAD USERS FOR NOTIFICATION SELECT (Admin only)
+// ═══════════════════════════════════════════
+
+function loadUsersForNotification() {
+    if (!SESSION_IS_ADMIN) return;
+    
+    fetch('/api/notifications/users')
+        .then(function(response) { return response.json(); })
+        .then(function(users) {
+            var select = document.getElementById('notificationReceiver');
+            users.forEach(function(u) {
+                var option = document.createElement('option');
+                option.value = u.username;
+                option.textContent = '👤 ' + u.username + (u.is_admin ? ' (ادمین)' : ' (اپراتور)');
+                select.appendChild(option);
+            });
+        })
+        .catch(function(err) { console.error('Error loading users:', err); });
+}
+
+// ═══════════════════════════════════════════
+// TOAST
+// ═══════════════════════════════════════════
+var toastTimer;
+function showToast(msg, type) {
+  var el = document.getElementById('toast');
+  el.textContent = msg;
+  el.className = 'toast show t-'+type;
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(function(){ el.className = 'toast hidden'; }, 3500);
+}
+
+// ═══════════════════════════════════════════
+// LOGOUT
+// ═══════════════════════════════════════════
+function logout() {
+  fetch('/api/logout', { method: 'POST' })
+    .then(function() {
+      window.location.href = '/';
+    })
+    .catch(function() {
+      window.location.href = '/';
+    });
+}
+
+// ═══════════════════════════════════════════
+// BOOT
+// ═══════════════════════════════════════════
+window.onload = function() {
+  // تنظیم رنگ نقش کاربر
+  var roleEl = document.getElementById('roleBadge');
+  if (SESSION_IS_SINA) {
+    roleEl.style.color = 'var(--purple)';
+    roleEl.textContent = '👑 ادمین ارشد';
+  } else if (SESSION_IS_ADMIN) {
+    roleEl.style.color = 'var(--warn)';
+    roleEl.textContent = '⭐ ادمین';
+  } else {
+    roleEl.textContent = '👤 اپراتور';
+  }
+
+  // تنظیم نام کاربر
+  document.getElementById('userBadge').textContent = '👤 ' + SESSION_USERNAME;
+
+  // نمایش پنل ادمین
+  var adminPanel = document.getElementById('adminPanel');
+  var adminNotifPanel = document.getElementById('adminNotificationPanel');
+  if (SESSION_IS_ADMIN) {
+    adminPanel.style.display = 'block';
+    adminNotifPanel.style.display = 'block';
+  } else {
+    adminPanel.style.display = 'none';
+    adminNotifPanel.style.display = 'none';
+  }
+
+  // نمایش دکمه پاک کردن کل پیام‌ها برای ادمین
+  if (SESSION_IS_ADMIN) {
+    var clearAllBtn = document.getElementById('clearAllAdminBtn');
+    if (clearAllBtn) {
+      clearAllBtn.style.display = 'inline-block';
+    }
+  }
+
+  updateGaugeColors();
+  
+  // شروع دریافت داده از HTTP API
+  document.getElementById('wsDot').className = 'ws-dot connected';
+  document.getElementById('wsLabel').textContent = '🟢 متصل (API)';
+  
+  // دریافت اولیه داده
+  fetchData();
+  
+  // بارگذاری اعلان‌ها
+  loadNotifications();
+  
+  // بارگذاری لیست کاربران برای ادمین
+  if (SESSION_IS_ADMIN) {
+    loadUsersForNotification();
+  }
+  
+  // بروزرسانی هر 100 میلی‌ثانیه
+  updateInterval = setInterval(fetchData, 100);
+  
+  // بروزرسانی اعلان‌ها هر ۱۰ ثانیه
+  setInterval(loadNotifications, 10000);
+};
+</script>
+</body>
+</html>
+```
