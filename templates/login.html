@@ -5,49 +5,32 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ورود — Siren Tester</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         :root {
-            --bg1: #1e1e2f;
-            --bg2: #0a0a0f;
-            --glass: rgba(30,30,40,0.5);
-            --text: #ffffff;
+            --bg1: #1e1e2f; --bg2: #0a0a0f;
+            --glass: rgba(30,30,40,0.5); --text: #ffffff;
             --text-sec: rgba(255,255,255,0.6);
             --border: rgba(255,255,255,0.2);
             --input: rgba(255,255,255,0.1);
-            --btn: #0a84ff;
-            --btn-hover: #0063ce;
-            --error: #ff453a;
-            --success: #30d158;
+            --btn: #0a84ff; --btn-hover: #0063ce;
+            --error: #ff453a; --success: #30d158;
         }
-        
         body.light {
-            --bg1: #e0e0e8;
-            --bg2: #f5f5f7;
-            --glass: rgba(255,255,255,0.6);
-            --text: #1c1c1e;
+            --bg1: #e0e0e8; --bg2: #f5f5f7;
+            --glass: rgba(255,255,255,0.6); --text: #1c1c1e;
             --text-sec: rgba(0,0,0,0.6);
             --border: rgba(0,0,0,0.15);
             --input: rgba(0,0,0,0.05);
-            --btn: #007aff;
-            --btn-hover: #0051d5;
+            --btn: #007aff; --btn-hover: #0051d5;
         }
-        
         body {
             min-height: 100vh;
             background: radial-gradient(circle at 20% 30%, var(--bg1), var(--bg2));
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            display: flex; align-items: center; justify-content: center;
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             padding: 20px;
             transition: background 0.4s ease;
         }
-        
         .glass-card {
             background: var(--glass);
             backdrop-filter: blur(25px);
@@ -60,11 +43,7 @@
             box-shadow: 0 25px 45px rgba(0,0,0,0.3);
             transition: all 0.3s ease;
         }
-        
-        body.light .glass-card {
-            box-shadow: 0 25px 45px rgba(0,0,0,0.1);
-        }
-        
+        body.light .glass-card { box-shadow: 0 25px 45px rgba(0,0,0,0.1); }
         h2 {
             font-size: 32px;
             font-weight: 590;
@@ -75,7 +54,6 @@
             text-align: center;
             margin-bottom: 32px;
         }
-        
         input {
             width: 100%;
             padding: 16px 20px;
@@ -88,16 +66,8 @@
             outline: none;
             transition: all 0.3s;
         }
-        
-        input:focus {
-            border-color: var(--btn);
-            box-shadow: 0 0 0 4px rgba(10,132,255,0.2);
-        }
-        
-        input::placeholder {
-            color: var(--text-sec);
-        }
-        
+        input:focus { border-color: var(--btn); box-shadow: 0 0 0 4px rgba(10,132,255,0.2); }
+        input::placeholder { color: var(--text-sec); }
         button {
             width: 100%;
             padding: 16px;
@@ -111,18 +81,8 @@
             margin-top: 12px;
             transition: all 0.2s;
         }
-        
-        button:hover {
-            background: var(--btn-hover);
-            transform: scale(0.98);
-        }
-        
-        button:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-            transform: none;
-        }
-        
+        button:hover { background: var(--btn-hover); transform: scale(0.98); }
+        button:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
         .error-box {
             background: rgba(255,69,58,0.15);
             border: 0.5px solid var(--error);
@@ -134,43 +94,9 @@
             text-align: center;
             display: none;
         }
-        
-        .success-box {
-            background: rgba(48,209,88,0.15);
-            border: 0.5px solid var(--success);
-            border-radius: 20px;
-            padding: 12px 16px;
-            margin-bottom: 18px;
-            color: var(--success);
-            font-size: 14px;
-            text-align: center;
-            display: none;
-        }
-        
-        .loading {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 3px solid rgba(255,255,255,0.3);
-            border-radius: 50%;
-            border-top-color: #fff;
-            animation: spin 1s ease-in-out infinite;
-            margin-right: 8px;
-        }
-        
-        @keyframes spin {
-            to {
-                transform: rotate(360deg);
-            }
-        }
-        
         .theme-btn {
-            position: fixed;
-            top: 18px;
-            right: 18px;
-            z-index: 200;
-            background: var(--glass);
-            backdrop-filter: blur(25px);
+            position: fixed; top: 18px; right: 18px; z-index: 200;
+            background: var(--glass); backdrop-filter: blur(25px);
             border: 0.5px solid var(--border);
             border-radius: 50px;
             padding: 8px 16px;
@@ -181,21 +107,25 @@
             width: auto;
             margin: 0;
         }
-        
-        .theme-btn:hover {
-            transform: scale(0.95);
-        }
-        
+        .theme-btn:hover { transform: scale(0.95); }
         .info-text {
             margin-top: 20px;
             text-align: center;
             font-size: 12px;
             color: var(--text-sec);
         }
-        
-        .info-text strong {
-            color: var(--text);
+        .info-text strong { color: var(--text); }
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+            margin-right: 8px;
         }
+        @keyframes spin { to { transform: rotate(360deg); } }
     </style>
 </head>
 <body>
@@ -204,10 +134,8 @@
 
     <div class="glass-card">
         <h2>🔐 Siren Tester</h2>
-
         <div id="errorBox" class="error-box">❌ نام کاربری یا رمز عبور اشتباه است</div>
-        <div id="successBox" class="success-box">✅ ورود موفق! در حال انتقال...</div>
-
+        
         <form id="loginForm" onsubmit="handleLogin(event)">
             <input type="text" id="username" placeholder="نام کاربری" required autocomplete="username" value="sina">
             <input type="password" id="password" placeholder="رمز عبور" required autocomplete="current-password" value="sina">
@@ -241,22 +169,11 @@
             const username = document.getElementById('username').value.trim();
             const password = document.getElementById('password').value.trim();
             const errorBox = document.getElementById('errorBox');
-            const successBox = document.getElementById('successBox');
             const loginBtn = document.getElementById('loginBtn');
             const loginText = document.getElementById('loginText');
             const loginLoader = document.getElementById('loginLoader');
 
-            // Reset
             errorBox.style.display = 'none';
-            successBox.style.display = 'none';
-
-            if (!username || !password) {
-                errorBox.textContent = '❌ لطفاً نام کاربری و رمز عبور را وارد کنید';
-                errorBox.style.display = 'block';
-                return;
-            }
-
-            // Show loading
             loginBtn.disabled = true;
             loginText.textContent = 'در حال ورود...';
             loginLoader.style.display = 'inline-block';
@@ -265,21 +182,19 @@
                 const response = await fetch('/api/login', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ username: username, password: password })
+                    body: JSON.stringify({ username, password })
                 });
 
                 const data = await response.json();
 
                 if (response.ok) {
-                    successBox.textContent = '✅ ورود موفق! در حال انتقال به داشبورد...';
-                    successBox.style.display = 'block';
+                    // 🟢 ذخیره Session ID در LocalStorage
+                    localStorage.setItem('session_id', data.session_id);
+                    localStorage.setItem('username', data.username);
+                    localStorage.setItem('is_admin', data.is_admin);
 
-                    console.log('✅ Login successful:', data);
-
-                    // Redirect to dashboard after short delay
-                    setTimeout(function() {
-                        window.location.href = '/dashboard';
-                    }, 500);
+                    // رفتن به داشبورد
+                    window.location.href = '/dashboard';
                 } else {
                     errorBox.textContent = '❌ ' + (data.detail || 'نام کاربری یا رمز عبور اشتباه است');
                     errorBox.style.display = 'block';
@@ -288,7 +203,6 @@
                     loginLoader.style.display = 'none';
                 }
             } catch (err) {
-                console.error('❌ Login error:', err);
                 errorBox.textContent = '❌ خطا در ارتباط با سرور';
                 errorBox.style.display = 'block';
                 loginBtn.disabled = false;
@@ -299,13 +213,6 @@
 
         // Enter key support
         document.getElementById('password').addEventListener('keydown', function(e) {
-            if (e.key === 'Enter') {
-                document.getElementById('loginForm').dispatchEvent(new Event('submit'));
-            }
-        });
-
-        // Also handle on username field
-        document.getElementById('username').addEventListener('keydown', function(e) {
             if (e.key === 'Enter') {
                 document.getElementById('loginForm').dispatchEvent(new Event('submit'));
             }
