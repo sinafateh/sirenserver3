@@ -4,30 +4,28 @@ from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.responses import Response
 from app.routers import auth, users, data, dashboard, notifications
 from app.database.database import init_db
-import os
 
-# ==================== قوی‌ترین Middleware برای حذف CSP ====================
-class ForceRemoveCSPMiddleware(BaseHTTPMiddleware):
+# ==================== قوی‌ترین Middleware برای حذف کامل CSP ====================
+class RemoveAllSecurityHeaders(BaseHTTPMiddleware):
     async def dispatch(self, request, call_next):
         response = await call_next(request)
         
-        # حذف کامل همه هدرهای امنیتی
-        security_headers = [
+        # لیست همه هدرهای امنیتی که باید حذف بشن
+        headers_to_remove = [
             "content-security-policy",
             "content-security-policy-report-only",
             "x-content-security-policy",
             "x-webkit-csp",
             "x-frame-options",
-            "x-xss-protection"
+            "x-xss-protection",
+            "referrer-policy"
         ]
         
-        for header in security_headers:
+        for header in headers_to_remove:
             if header in response.headers:
                 del response.headers[header]
         
-        # تنظیم هدرهای جدید با دسترسی کامل
-        response.headers["Content-Security-Policy"] = "default-src * 'unsafe-inline' 'unsafe-eval' data: blob:; script-src * 'unsafe-inline' 'unsafe-eval' data: blob:;"
-        
+        # هیچ هدر CSP اضافه نمیکنیم - کاملاً حذفش میکنیم
         return response
 
 # راه‌اندازی دیتابیس
@@ -41,7 +39,8 @@ app = FastAPI(
 )
 
 # ==================== اضافه کردن Middlewareها ====================
-app.add_middleware(ForceRemoveCSPMiddleware)
+# اولویت: این middleware باید اولین باشه
+app.add_middleware(RemoveAllSecurityHeaders)
 
 app.add_middleware(
     CORSMiddleware,
@@ -65,4 +64,10 @@ async def health_check():
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    uvicorn.run(
+        app, 
+        host="0.0.0.0", 
+        port=8000,
+        # مهم: این پارامتر رو اضافه کن تا CSP غیرفعال بشه
+        headers=[("Content-Security-Policy", "default-src * 'unsafe-inline' 'unsafe-eval' data: blob:;")]
+    )
