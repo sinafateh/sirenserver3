@@ -1,6 +1,17 @@
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+from starlette.middleware.base import BaseHTTPMiddleware
 from app.routers import auth, users, data, dashboard, notifications
 from app.database.database import init_db
+
+# ==================== Middleware برای حذف CSP ====================
+class RemoveCSPMiddleware(BaseHTTPMiddleware):
+    async def dispatch(self, request, call_next):
+        response = await call_next(request)
+        # حذف هدر Content-Security-Policy
+        if "content-security-policy" in response.headers:
+            del response.headers["content-security-policy"]
+        return response
 
 # راه‌اندازی دیتابیس
 init_db()
@@ -12,7 +23,18 @@ app = FastAPI(
     version="2.0"
 )
 
-# ثبت روت‌ها
+# ==================== اضافه کردن Middlewareها ====================
+app.add_middleware(RemoveCSPMiddleware)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+# ==================== ثبت روت‌ها ====================
 app.include_router(auth.router)
 app.include_router(users.router)
 app.include_router(data.router)
