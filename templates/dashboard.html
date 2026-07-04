@@ -1003,14 +1003,11 @@ function updateGaugeColors() {
 // ═══════════════════════════════════════════
 // تابع کمکی برای ارسال درخواست با Session ID
 // ═══════════════════════════════════════════
-function fetchWithAuth(url, options = {}) {
-    return fetch(url, {
-        ...options,
-        headers: {
-            ...options.headers,
-            'Session-ID': SESSION_ID  // کلید اصلی
-        }
-    });
+function fetchWithAuth(url, options) {
+    options = options || {};
+    options.headers = options.headers || {};
+    options.headers['Session-ID'] = SESSION_ID;
+    return fetch(url, options);
 }
 
 // ═══════════════════════════════════════════
@@ -1551,7 +1548,6 @@ function showToast(msg, type) {
 function logout() {
     fetchWithAuth('/api/logout', { method: 'POST' })
         .then(function() {
-            // پاک کردن LocalStorage
             localStorage.removeItem('session_id');
             localStorage.removeItem('username');
             localStorage.removeItem('is_admin');
