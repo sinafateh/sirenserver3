@@ -175,7 +175,7 @@
         <h2>🔐 Siren Tester</h2>
         <div id="errorBox" class="error-box">❌ نام کاربری یا رمز عبور اشتباه است</div>
 
-        <form id="loginForm" onsubmit="handleLogin(event)">
+        <form id="loginForm">
             <input type="text" id="username" placeholder="نام کاربری" required autocomplete="username" value="sina">
             <input type="password" id="password" placeholder="رمز عبور" required autocomplete="current-password" value="sina">
             <button type="submit" id="loginBtn">
@@ -202,53 +202,53 @@
         }
 
         // ==================== Login ====================
-        async function handleLogin(e) {
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
             e.preventDefault();
 
-            const username = document.getElementById('username').value.trim();
-            const password = document.getElementById('password').value.trim();
-            const errorBox = document.getElementById('errorBox');
-            const loginBtn = document.getElementById('loginBtn');
-            const loginText = document.getElementById('loginText');
-            const loginLoader = document.getElementById('loginLoader');
+            var username = document.getElementById('username').value.trim();
+            var password = document.getElementById('password').value.trim();
+            var errorBox = document.getElementById('errorBox');
+            var loginBtn = document.getElementById('loginBtn');
+            var loginText = document.getElementById('loginText');
+            var loginLoader = document.getElementById('loginLoader');
 
             errorBox.style.display = 'none';
             loginBtn.disabled = true;
             loginText.textContent = 'در حال ورود...';
             loginLoader.style.display = 'inline-block';
 
-            try {
-                const response = await fetch('/api/login', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ username, password })
+            fetch('/api/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ username: username, password: password })
+            })
+            .then(function(response) {
+                return response.json().then(function(data) {
+                    if (!response.ok) {
+                        throw new Error(data.detail || 'خطا در ورود');
+                    }
+                    return data;
                 });
+            })
+            .then(function(data) {
+                // ذخیره در LocalStorage
+                localStorage.setItem('session_id', data.session_id);
+                localStorage.setItem('username', data.username);
+                localStorage.setItem('is_admin', data.is_admin);
 
-                const data = await response.json();
-
-                if (response.ok) {
-                    // 🟢 ذخیره Session ID در LocalStorage
-                    localStorage.setItem('session_id', data.session_id);
-                    localStorage.setItem('username', data.username);
-                    localStorage.setItem('is_admin', data.is_admin);
-
-                    // 🟢 رفتن به داشبورد (کوکی هم تنظیم شده)
-                    window.location.href = '/dashboard';
-                } else {
-                    errorBox.textContent = '❌ ' + (data.detail || 'نام کاربری یا رمز عبور اشتباه است');
-                    errorBox.style.display = 'block';
-                    loginBtn.disabled = false;
-                    loginText.textContent = 'ورود';
-                    loginLoader.style.display = 'none';
-                }
-            } catch (err) {
-                errorBox.textContent = '❌ خطا در ارتباط با سرور';
+                // رفتن به داشبورد
+                window.location.href = '/dashboard';
+            })
+            .catch(function(error) {
+                errorBox.textContent = '❌ ' + error.message;
                 errorBox.style.display = 'block';
                 loginBtn.disabled = false;
                 loginText.textContent = 'ورود';
                 loginLoader.style.display = 'none';
-            }
-        }
+            });
+        });
 
         // Enter key support
         document.getElementById('password').addEventListener('keydown', function(e) {
