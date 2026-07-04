@@ -22,7 +22,7 @@ async def login(data: LoginData, response: Response):
     # ایجاد Session
     session_id = create_user_session(data.username)
     
-    # تنظیم کوکی (برای رندر صفحه اول و سازگاری با مرورگر)
+    # تنظیم کوکی (برای رندر صفحه اول)
     response.set_cookie(
         key="session_id",
         value=session_id,
@@ -35,7 +35,7 @@ async def login(data: LoginData, response: Response):
         "status": "success",
         "username": user["username"],
         "is_admin": user["is_admin"],
-        "session_id": session_id  # برای ذخیره در LocalStorage
+        "session_id": session_id
     })
 
 # ==================== خروج ====================
@@ -45,11 +45,9 @@ async def logout(
     response: Response = None
 ):
     """خروج کاربر با Session ID از Header یا کوکی"""
-    # اگر از Header نیامد، از کوکی نمیگیریم چون کوکی HttpOnly هست
     if session_id:
         remove_session(session_id)
     
-    # پاک کردن کوکی
     if response:
         response.delete_cookie("session_id", path="/")
     
